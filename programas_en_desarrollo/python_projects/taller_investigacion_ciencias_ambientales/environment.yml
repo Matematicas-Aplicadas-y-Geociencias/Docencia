@@ -1,0 +1,10 @@
+name: enes_env
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - jupyterlab
+  - matplotlib
+  - numpy
+  - scipy
+prefix: /home/edwin/anaconda3/envs/enes_env
