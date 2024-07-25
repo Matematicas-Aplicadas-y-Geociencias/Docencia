@@ -52,9 +52,9 @@ en ambos casos, te debe dar una respuesta similar a la siguiente:
 ```shell
 # conda environments:
 #
-base                 *  /home/username/miniconda/envs/myenv
-enes_env                /home/username/miniconda/envs/snowflakes
-exam                    /home/username/miniconda/envs/bunnies
+base                 *  /home/username/anaconda3/envs/myenv
+enes_env                /home/username/anaconda3/envs/snowflakes
+exam                    /home/username/anaconda3/envs/bunnies
 ```
 El `*` indica el entorno que está activo.
 
