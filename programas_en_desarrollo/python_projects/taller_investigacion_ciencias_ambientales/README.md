@@ -1,55 +1,4 @@
-# Entornos de trabajo Python.
-
-### Crear un entorno de python con una versión en particular:
-
-```bash
-    conda create --name <environment_name> python=X.X
-```
-### Activar el entorno:
-
-```bash
-    conda activate <environment_name> 
-```
-
-### Desactivar el entorno:
-
-```bash
-    conda deactivate
-```
-
-### Instalar bibliotecas de python dentro del entorno de trabajo:
-
-```bash
-    conda install <library_name_1> <library_name_2> ... <library_name_n>
-```
-
-### Exportar entorno de python para usar en diversos sistemas operativos:
-
-```bash
-    conda env export --from-history > environment.yml
-```
-
-### Crear un entorno a partir de un archivo environment.yml:
-
-```bash
-    conda env create -f environment.yml
-```
-
-### Actualizar un entorno:
-
-```bash
-    conda env update --file environment.yml --prune
-```
-
-### Eliminar un entorno:
-
-```bash
-    conda remove --name <environment_name> --all
-```
-
----
-
-## Tutorial Completo: Entornos de Trabajo en Python con Conda
+## Entornos de Trabajo en Python con Conda
 
 ### ¿Qué es un entorno de trabajo en Python?
 Un entorno de trabajo en Python es un directorio aislado que contiene una instalación específica de Python, junto con las bibliotecas y paquetes que se requieren para un proyecto en particular. Esto permite mantener diferentes proyectos con diferentes versiones de Python y bibliotecas sin que se produzcan conflictos.
@@ -71,7 +20,7 @@ conda create --name <nombre_entorno> python=X.X
 
 **Ejemplo:**
 ```bash
-conda create --name mi_proyecto_tensorflow python=3.9
+conda create --name mi_proyecto_unam python=3.10
 ```
 
 #### Activación del entorno
@@ -80,18 +29,42 @@ conda activate <nombre_entorno>
 ```
 Una vez activado, el símbolo del sistema mostrará el nombre del entorno activo.
 
+Por ejemplo:
+```shell
+(nombre_entorno) directorio_del_proyecto $
+```
+
 #### Desactivación del entorno
 ```bash
 conda deactivate
 ```
 
+#### Ver los entornos existente
+Para ver una lista de todos los entornos existentes, ejecuta la siguiente expresión:
+```bash
+conda info --envs
+```
+o también puedes ejecutar lo siguiente:
+```bash
+conda env list
+```
+
+Una lista similar a la siguiente se va a mostrar:
+
+```shell
+conda environments:
+
+base              *   /home/username/miniconda/envs/myenv
+enes_env              /home/username/miniconda/envs/snowflakes
+unam_env              /home/username/miniconda/envs/bunnies
+```
 #### Instalación de bibliotecas
 ```bash
-conda install <biblioteca1> <biblioteca2> ...
+conda install <biblioteca_1>  <biblioteca_2> ...
 ```
 **Ejemplo:**
 ```bash
-conda install numpy pandas matplotlib
+conda install numpy scipy matplotlib
 ```
 
 #### Exportación del entorno
@@ -114,21 +87,18 @@ Este comando actualiza todos los paquetes en el entorno a las versiones especifi
 
 #### Eliminación de un entorno
 ```bash
-conda remove --name <nombre_entorno> --all
-```
-
-### Ejemplo completo
+o también puedes ejecutar lo siguiente:# Ejemplo completo
 1. **Crear un entorno para un proyecto de aprendizaje automático:**
    ```bash
-   conda create --name mi_proyecto_ml python=3.8
+   conda create --name enes_env python=3.11
    ```
 2. **Activar el entorno:**
    ```bash
-   conda activate mi_proyecto_ml
+   conda activate enes_env
    ```
 3. **Instalar las bibliotecas necesarias:**
    ```bash
-   conda install numpy pandas scikit-learn tensorflow
+   conda install numpy scipy matplotlib jupyterlab
    ```
 4. **Exportar el entorno a un archivo:**
    ```bash
@@ -136,12 +106,3 @@ conda remove --name <nombre_entorno> --all
    ```
 5. **Compartir el proyecto con un colaborador:**
    Envíale el archivo `environment.yml` y que lo ejecute para crear el mismo entorno en su máquina.
-
-### Consideraciones adicionales
-* **Virtualenv:** Otra herramienta popular para crear entornos virtuales en Python.
-* **Conda vs. pip:** Conda puede gestionar tanto paquetes Python como otros paquetes binarios, mientras que pip se enfoca en paquetes Python.
-* **Entornos globales vs. locales:** Los entornos globales afectan a todo el sistema, mientras que los entornos locales están aislados.
-
-**¡Con este tutorial, estarás listo para crear y gestionar entornos de trabajo en Python de manera eficiente!**
-
-**¿Te gustaría profundizar en algún tema específico?** Por ejemplo, puedo explicar cómo resolver conflictos de versiones entre bibliotecas, cómo utilizar diferentes canales de conda, o cómo integrar entornos de trabajo con herramientas de desarrollo como Jupyter Notebook.
