@@ -30,7 +30,7 @@ conda activate <nombre_entorno>
 Una vez activado, el símbolo del sistema mostrará el nombre del entorno activo.
 
 Por ejemplo:
-```shell
+```
 (nombre_entorno) directorio_del_proyecto $
 ```
 
@@ -39,25 +39,25 @@ Por ejemplo:
 conda deactivate
 ```
 
-#### Ver los entornos existente
-Para ver una lista de todos los entornos existentes, ejecuta la siguiente expresión:
+#### Ver los entornos existentes
+Para ver los entornos que se han creado:
 ```bash
 conda info --envs
 ```
-o también puedes ejecutar lo siguiente:
+o también:
 ```bash
 conda env list
 ```
-
-Una lista similar a la siguiente se va a mostrar:
-
+en ambos casos, te debe dar una respuesta similar a la siguiente:
 ```shell
-conda environments:
-
-base              *   /home/username/miniconda/envs/myenv
-enes_env              /home/username/miniconda/envs/snowflakes
-unam_env              /home/username/miniconda/envs/bunnies
+# conda environments:
+#
+base                 *  /home/username/miniconda/envs/myenv
+enes_env                /home/username/miniconda/envs/snowflakes
+exam                    /home/username/miniconda/envs/bunnies
 ```
+El `*` indica el entorno que está activo.
+
 #### Instalación de bibliotecas
 ```bash
 conda install <biblioteca_1>  <biblioteca_2> ...
@@ -87,7 +87,10 @@ Este comando actualiza todos los paquetes en el entorno a las versiones especifi
 
 #### Eliminación de un entorno
 ```bash
-o también puedes ejecutar lo siguiente:# Ejemplo completo
+conda remove --name <nombre_entorno> --all
+```
+
+### Ejemplo completo
 1. **Crear un entorno para un proyecto de aprendizaje automático:**
    ```bash
    conda create --name enes_env python=3.11
@@ -104,5 +107,5 @@ o también puedes ejecutar lo siguiente:# Ejemplo completo
    ```bash
    conda env export --from-history > environment.yml
    ```
-5. **Compartir el proyecto con un colaborador:**
-   Envíale el archivo `environment.yml` y que lo ejecute para crear el mismo entorno en su máquina.
+5. **Compartir el proyecto con un colaborador:**  
+   Comparte el archivo `environment.yml` y que lo ejecute para crear el mismo entorno en su máquina.
