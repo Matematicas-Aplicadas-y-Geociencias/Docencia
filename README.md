@@ -2,6 +2,9 @@
 ## ENES Mérida - Docencia
 ### Departamento de Matemáticas Aplicadas y Computación
 > Repositorio de programas, escritos en varios lenguajes, que apoyan la labor docente en la Licenciatura en Ciencias de la Tierra.
+<div style="text-align: center;">
+    <img src="imagenes/docencia.jpg" alt="Banner curso" style="width:80%">
+</div>
 
 ## Asignaturas por semestre:
 ---
@@ -26,8 +29,6 @@
 ### Semestre 10
 *proximamente*
 
-<div style="text-align: center;">
-    <img src="imagenes/docencia.jpg" alt="Banner curso" style="width:80%">
-</div>
+
 
 ### [**[Regresar al repositorio principal]**](https://github.com/ENES-Merida)
