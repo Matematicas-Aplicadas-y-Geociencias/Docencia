@@ -93,6 +93,9 @@
 
 32. El fichero [cotizacion.csv](https://aprendeconalf.es/docencia/python/ejercicios/soluciones/ficheros/cotizacion.csv) contiene las cotizaciones de las empresas del IBEX35 con las siguientes columnas: `Nombre` (nombre de la empresa), `Final` (precio de la acción al cierre de bolsa), `Máximo` (precio máximo de la acción durante la jornada), `Mínimo` (precio mínimo de la acción durante la jornada), `Volumen` (Volumen al cierre de bolsa), `Efectivo` (capitalización al cierre en miles de euros).
 
+    1. Construir una función reciba el fichero de cotizaciones y devuelva un diccionario con los datos del fichero por columnas.
+    2. Construir una función que reciba el diccionario devuelto por la  función anterior y cree un fichero en formato csv con el mínimo, el  máximo y la media de dada columna.
+
 33. Escribir una función que pida un número entero entre 1 y 10 y guarde en un fichero con el nombre `tabla-n.txt` la tabla de multiplicar de ese número, donde `n` es el número introducido.
 
 34. Escribir una función que pida un número entero entre 1 y 10, lea el fichero `tabla-n.txt` con la tabla de multiplicar de ese número, done `n` es el número introducido, y la muestre por pantalla. Si el fichero no existe debe mostrar un mensaje por pantalla informando de ello.
