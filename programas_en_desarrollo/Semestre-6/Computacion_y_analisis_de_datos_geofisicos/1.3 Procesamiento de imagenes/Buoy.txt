@@ -1,7 +1,0 @@
-%Buoy 1 (Spratt Sands)
-xarea1=[20 180 180 20];
-yarea1=[230 230 300 300];
-Area1=I(yarea1(1):yarea1(3),xarea1(1):xarea1(2),1);
-rowsA1=size(Area1,1);
-colA1=size(Area1,2);
-imshow(I)
