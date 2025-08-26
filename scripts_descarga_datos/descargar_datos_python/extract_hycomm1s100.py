@@ -51,6 +51,7 @@ def descargar_datos_hycomm(
                         total=total_size,
                         unit='B',
                         unit_scale=True,
+                        unit_divisor=1024,
                         desc=f"Descargando {nombre_archivo}"
                     ) as pbar:
                         downloaded = 0
@@ -60,8 +61,7 @@ def descargar_datos_hycomm(
                                 downloaded += len(chunk)
                                 pbar.update(len(chunk))
 
-                logger.info(f"Descarga completada: {ruta_descarga_datos}")
-                logger.info(f"Tamaño final: {downloaded / (1024*1024):.2f} MB")
+                logger.info(f"Descarga completada: {ruta_descarga_datos}. Tamaño final: {downloaded / (1024*1024):.2f} MB")
 
                 return Descarga.EXITOSA
 
@@ -76,8 +76,8 @@ def descargar_datos_hycomm(
         return Descarga.FALLIDA
 
 def main():
-    fecha_inicial: str = '2001-365-22'
-    fecha_final: str = '2002-002-13'
+    fecha_inicial: str = '2001-365-21'
+    fecha_final: str = '2002-001-11'
 
     try:
         fecha_datos_inicial: datetime = datetime.strptime(fecha_inicial, '%Y-%j-%H')
@@ -120,13 +120,11 @@ def main():
                 else:
                     logger.error(f"Falló después de {Constante.MAXIMO_REINTENTOS.value} reintentos: {nombre_archivo}")
                     archivos_fallidos += 1
-
         #
         if estatus == Descarga.EXITOSA:
             archivos_descargados += 1
         #
         fecha += relativedelta(hours=1)
-
     #
     logger.info("="*50)
     logger.info("RESUMEN DE DESCARGA")
@@ -137,21 +135,4 @@ def main():
     logger.info("="*50)
 
 if __name__ == "__main__":
-    # fecha_inicial: str = '2001-016-00'
-    # fecha_datos: datetime = datetime.strptime(fecha_inicial, '%Y-%j-%H') + relativedelta(hours=4)
-    # anio: int = fecha_datos.year
-    # dia: str = fecha_datos.strftime('%j')
-    # hora: int = fecha_datos.hour
-    # #
-    # nombre_archivo: str = f'010_archv.{anio}_{dia}_{hora:02d}_2d.nc'
-    # directorio_descargas_datos: Path = Path(f'datos_hycomm_1_100/{anio}')
-    # directorio_descargas_datos.mkdir(parents=True, exist_ok=True)
-    # ruta_descarga_datos: Path = directorio_descargas_datos / nombre_archivo
-    # #
-    # url: str = f'https://tds.hycom.org/thredds/fileServer/datasets/GOMb0.01/reanalysis/data/{anio}/{nombre_archivo}'
-    # url_datos: httpx.URL = httpx.URL(url)
-    # #
-    # print(ruta_descarga_datos)
-    # print(url_datos)
-    # descargar_datos_hycomm(url_datos, ruta_descarga_datos)
     main()
