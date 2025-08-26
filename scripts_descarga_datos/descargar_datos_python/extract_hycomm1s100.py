@@ -20,7 +20,7 @@ class Descarga(Enum):
 class Constante(Enum):
     TAMNIO_CHUNK_DEFAULT = 32*1024
     TIEMPO_ESPERA = 8
-    MAXIMO_REINTENTOS = 10
+    REINTENTOS_MAXIMOS = 10
     TIMEOUT = 300.0
 
 def descargar_datos_hycomm(
@@ -31,6 +31,7 @@ def descargar_datos_hycomm(
     Descarga un archivo NetCDF grande usando streaming
     con barra de progreso
     """
+    # Verifica si el archivo ya existe
     nombre_archivo = ruta_descarga_datos.name
     if ruta_descarga_datos.exists():
         logger.info(f"Archivo ya existe: {nombre_archivo}, no se descargará de nuevo...")
@@ -77,7 +78,7 @@ def descargar_datos_hycomm(
 
 def main():
     fecha_inicial: str = '2001-365-21'
-    fecha_final: str = '2002-001-11'
+    fecha_final: str = '2002-001-09'
 
     try:
         fecha_datos_inicial: datetime = datetime.strptime(fecha_inicial, '%Y-%j-%H')
@@ -86,46 +87,52 @@ def main():
         logger.error(f"Error al convertir fechas: {e}")
         return
 
-    fecha = fecha_datos_inicial
-    archivos_procesados: int = 0
-    archivos_descargados: int = 0
-    archivos_fallidos: int = 0
+    fecha = fecha_datos_inicial     # Variable de control del ciclo while
+    archivos_procesados: int = 0    # Contador de archivos procesados
+    archivos_descargados: int = 0   # Contador de archivos descargados
+    archivos_fallidos: int = 0      # Contador de archivos no descargados
 
     while fecha <= fecha_datos_final:
         archivos_procesados += 1
-        #
+
+        # Extraer componentes de fecha
         anio: int = fecha.year
         dia: str = fecha.strftime('%j')
         hora: int = fecha.hour
-        #
+
+        # Crear nombre de archivo y rutas
         nombre_archivo: str = f'010_archv.{anio}_{dia}_{hora:02d}_2d.nc'
         directorio_descargas_datos: Path = Path(f'datos_hycomm_1_100/{anio}')
         directorio_descargas_datos.mkdir(parents=True, exist_ok=True)
         ruta_descarga_datos: Path = directorio_descargas_datos / nombre_archivo
-        #
+
+        # Crear URL
         url: str = f'https://tds.hycom.org/thredds/fileServer/datasets/GOMb0.01/reanalysis/data/{anio}/{nombre_archivo}'
         url_datos: httpx.URL = httpx.URL(url)
-        #
         logger.info(f"Procesando: {ruta_descarga_datos}")
-        #
+
+        # Intentar descarga con reintentos limitados
         estatus = Descarga.FALLIDA
         reintentos = 0
-        while estatus == Descarga.FALLIDA and reintentos <= Constante.MAXIMO_REINTENTOS.value:
+        while estatus == Descarga.FALLIDA and reintentos <= Constante.REINTENTOS_MAXIMOS.value:
             estatus = descargar_datos_hycomm(url_datos, ruta_descarga_datos)
             if estatus == Descarga.FALLIDA:
                 reintentos += 1
-                if reintentos <= Constante.MAXIMO_REINTENTOS.value:
-                    logger.warning(f"Reintento {reintentos}/{Constante.MAXIMO_REINTENTOS.value} en {Constante.TIEMPO_ESPERA.value} segundos...")
+                if reintentos <= Constante.REINTENTOS_MAXIMOS.value:
+                    logger.warning(f"Reintento {reintentos}/{Constante.REINTENTOS_MAXIMOS.value} en {Constante.TIEMPO_ESPERA.value} segundos...")
                     time.sleep(Constante.TIEMPO_ESPERA.value)
                 else:
-                    logger.error(f"Falló después de {Constante.MAXIMO_REINTENTOS.value} reintentos: {nombre_archivo}")
+                    logger.error(f"Falló después de {Constante.REINTENTOS_MAXIMOS.value} reintentos: {nombre_archivo}")
                     archivos_fallidos += 1
-        #
+
+        # Contador de archivos descargados exitosamente
         if estatus == Descarga.EXITOSA:
             archivos_descargados += 1
-        #
+
+        # Avanzar a la siguiente hora
         fecha += relativedelta(hours=1)
-    #
+
+    # Resumen final
     logger.info("="*50)
     logger.info("RESUMEN DE DESCARGA")
     logger.info(f"Archivos procesados: {archivos_procesados}")
