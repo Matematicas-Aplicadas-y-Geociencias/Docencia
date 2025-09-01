@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 import logging
 from tqdm import tqdm
 from enum import Enum
+import sys
 
 # Configurar logging
 logging.basicConfig(
@@ -20,22 +21,24 @@ class Descarga(Enum):
     FALLIDA = False
 
 
-class Constante(Enum):
-    CHUNK_SIZE = 512 * 1024
-    TIEMPO_ESPERA = 8
-    REINTENTOS_MAXIMOS = 10
-    TIMEOUT = 300.0
+# Valores Constantes
+CHUNK_SIZE = 512 * 1024
+TIEMPO_ESPERA = 8
+REINTENTOS_MAXIMOS = 10
+TIMEOUT = 300.0
 
-
-class Estatus(Enum):
-    EXITOSO = 0
-    FALLIDO = 1
+# @dataclass(frozen=True)
+# class Configuration:
+#     chunk_size: int
+#     sleep_time: int
+#     timeout: float
+#     retries_number: int
 
 
 def descargar_datos_hycomm(
     url_datos: httpx.URL,
     ruta_descarga_datos: Path,
-    chunk_size: int = Constante.CHUNK_SIZE.value,
+    chunk_size: int = CHUNK_SIZE,
 ) -> Descarga:
     """
     Descarga un archivo NetCDF grande usando streaming
@@ -44,7 +47,7 @@ def descargar_datos_hycomm(
     nombre_archivo = ruta_descarga_datos.name
 
     try:
-        with httpx.Client(timeout=Constante.TIMEOUT.value) as client:
+        with httpx.Client(timeout=TIMEOUT) as client:
             # Hacer request con streaming
             with client.stream("GET", url_datos) as response:
                 response.raise_for_status()
@@ -85,16 +88,16 @@ def descargar_datos_hycomm(
         return Descarga.FALLIDA
 
 
-def main() -> Estatus:
-    fecha_inicial: str = "2001-365-19"
+def main() -> None:
+    fecha_inicial: str = "2001-365-18"
     fecha_final: str = "2002-001-06"
 
     try:
         fecha_datos_inicial: datetime = datetime.strptime(fecha_inicial, "%Y-%j-%H")
         fecha_datos_final: datetime = datetime.strptime(fecha_final, "%Y-%j-%H")
     except ValueError as e:
-        logger.error(f"Error al convertir fechas: {e}")
-        return Estatus.FALLIDO
+        logger.error(f"Formato de fecha incorrecto: {e}.")
+        sys.exit(1)
 
     fecha = fecha_datos_inicial  # Variable de control del ciclo while
     archivos_procesados: int = 0  # Contador de archivos procesados
@@ -131,21 +134,18 @@ def main() -> Estatus:
         # Intentar descargar el archivo con reintentos limitados
         estatus = Descarga.FALLIDA
         reintentos = 0
-        while (
-            estatus == Descarga.FALLIDA
-            and reintentos <= Constante.REINTENTOS_MAXIMOS.value
-        ):
+        while estatus == Descarga.FALLIDA and reintentos <= REINTENTOS_MAXIMOS:
             estatus = descargar_datos_hycomm(url_datos, ruta_descarga_datos)
             if estatus == Descarga.FALLIDA:
                 reintentos += 1
-                if reintentos <= Constante.REINTENTOS_MAXIMOS.value:
+                if reintentos <= REINTENTOS_MAXIMOS:
                     logger.warning(
-                        f"Reintento {reintentos}/{Constante.REINTENTOS_MAXIMOS.value} en {Constante.TIEMPO_ESPERA.value} segundos..."
+                        f"Reintento {reintentos}/{REINTENTOS_MAXIMOS} en {TIEMPO_ESPERA} segundos..."
                     )
-                    time.sleep(Constante.TIEMPO_ESPERA.value)
+                    time.sleep(TIEMPO_ESPERA)
                 else:
                     logger.error(
-                        f"Falló después de {Constante.REINTENTOS_MAXIMOS.value} reintentos: {nombre_archivo}"
+                        f"Falló después de {REINTENTOS_MAXIMOS} reintentos: {nombre_archivo}"
                     )
                     archivos_fallidos += 1
 
@@ -166,8 +166,6 @@ def main() -> Estatus:
     )
     logger.info(f"Archivos fallidos: {archivos_fallidos}")
     logger.info("=" * 50)
-
-    return Estatus.EXITOSO
 
 
 if __name__ == "__main__":
