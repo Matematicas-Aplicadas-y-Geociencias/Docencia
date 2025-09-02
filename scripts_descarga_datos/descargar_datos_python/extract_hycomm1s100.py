@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import httpx
 from pathlib import Path
 from datetime import datetime
@@ -15,156 +16,156 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-# Configurar Enum
-class Descarga(Enum):
-    EXITOSA = True
-    FALLIDA = False
+# Configurar Clase Enum
+class DownloadStatus(Enum):
+    SUCESS = True
+    FAIL = False
 
 
-# Valores Constantes
-CHUNK_SIZE = 512 * 1024
-TIEMPO_ESPERA = 8
-REINTENTOS_MAXIMOS = 10
-TIMEOUT = 300.0
-
-# @dataclass(frozen=True)
-# class Configuration:
-#     chunk_size: int
-#     sleep_time: int
-#     timeout: float
-#     retries_number: int
+@dataclass(frozen=True)
+class DownloadSettings:
+    chunk_size: int
+    sleep_time: int
+    timeout: float
+    retries_number: int
 
 
 def descargar_datos_hycomm(
-    url_datos: httpx.URL,
-    ruta_descarga_datos: Path,
-    chunk_size: int = CHUNK_SIZE,
-) -> Descarga:
+    data_url: httpx.URL,
+    output_file: Path,
+    download_settings: DownloadSettings,
+) -> DownloadStatus:
     """
     Descarga un archivo NetCDF grande usando streaming
     con barra de progreso
     """
-    nombre_archivo = ruta_descarga_datos.name
+    filename: str = output_file.name
 
     try:
-        with httpx.Client(timeout=TIMEOUT) as client:
+        with httpx.Client(timeout=download_settings.timeout) as client:
             # Hacer request con streaming
-            with client.stream("GET", url_datos) as response:
+            with client.stream("GET", data_url) as response:
                 response.raise_for_status()
 
                 # Obtener tamaño total si está disponible
-                total_size = int(response.headers.get("content-length", 0))
+                total_size: int = int(response.headers.get("content-length", 0))
 
                 # Descargar con barra de progreso
-                with open(ruta_descarga_datos, "wb") as f:
+                with open(output_file, "wb") as f:
                     with tqdm(
                         total=total_size,
                         unit="B",
                         unit_scale=True,
                         unit_divisor=1024,
-                        desc=f"Descargando {nombre_archivo}",
+                        desc=f"Downloading {filename}",
                     ) as pbar:
                         downloaded = 0
-                        for chunk in response.iter_bytes(chunk_size=chunk_size):
+                        for chunk in response.iter_bytes(chunk_size=download_settings.chunk_size):
                             if chunk:
                                 f.write(chunk)
                                 downloaded += len(chunk)
                                 pbar.update(len(chunk))
 
                 logger.info(
-                    f"Descarga completada: {ruta_descarga_datos}. Tamaño final: {downloaded / (1024 * 1024):.2f} MB"
+                    f"Download complete: {output_file}. Final size: {downloaded / (1024 * 1024):.2f} MB"
                 )
 
-                return Descarga.EXITOSA
+                return DownloadStatus.SUCESS
 
     except httpx.RequestError as e:
-        logger.error(f"Error de conexión: {e}")
-        return Descarga.FALLIDA
+        logger.error(f"{type(e).__name__}: {e}")
+        return DownloadStatus.FAIL
     except httpx.HTTPStatusError as e:
-        logger.error(f"Error HTTP {e.response.status_code}: {e}")
-        return Descarga.FALLIDA
+        logger.error(f"{type(e).__name__} {e.response.status_code}: {e}")
+        return DownloadStatus.FAIL
     except Exception as e:
-        logger.error(f"Error inesperado: {e}")
-        return Descarga.FALLIDA
+        logger.error(f"{type(e).__name__}: {e}")
+        return DownloadStatus.FAIL
 
 
 def main() -> None:
-    fecha_inicial: str = "2001-365-18"
-    fecha_final: str = "2002-001-06"
+    start_date: str = "2001-365-20"
+    end_date: str = "2002-001-08"
 
     try:
-        fecha_datos_inicial: datetime = datetime.strptime(fecha_inicial, "%Y-%j-%H")
-        fecha_datos_final: datetime = datetime.strptime(fecha_final, "%Y-%j-%H")
+        data_start_date: datetime = datetime.strptime(start_date, "%Y-%j-%H")
+        data_end_date: datetime = datetime.strptime(end_date, "%Y-%j-%H")
     except ValueError as e:
-        logger.error(f"Formato de fecha incorrecto: {e}.")
+        logger.error(f"{type(e).__name__}: {e}.")
         sys.exit(1)
 
-    fecha = fecha_datos_inicial  # Variable de control del ciclo while
-    archivos_procesados: int = 0  # Contador de archivos procesados
-    archivos_descargados: int = 0  # Contador de archivos descargados
-    archivos_fallidos: int = 0  # Contador de archivos no descargados
+    download_settings: DownloadSettings = DownloadSettings(
+        chunk_size = 512 * 1024,
+        sleep_time = 8,
+        timeout = 300.0,
+        retries_number = 10
+    )
 
-    while fecha <= fecha_datos_final:
-        archivos_procesados += 1
+    current_date = data_start_date # Variable de control del ciclo while
+    processed_files: int = 0  # Contador de archivos procesados
+    downloaded_files: int = 0  # Contador de archivos descargados
+    failed_files: int = 0  # Contador de archivos no descargados
+
+    while current_date <= data_end_date:
+        processed_files += 1
 
         # Extraer componentes de fecha
-        anio: int = fecha.year
-        dia: str = fecha.strftime("%j")
-        hora: int = fecha.hour
+        year: int = current_date.year
+        day: str = current_date.strftime("%j")
+        hour: int = current_date.hour
 
         # Crear nombre de archivo y rutas
-        nombre_archivo: str = f"010_archv.{anio}_{dia}_{hora:02d}_2d.nc"
-        directorio_descargas_datos: Path = Path(f"datos_hycomm_1_100/{anio}")
-        directorio_descargas_datos.mkdir(parents=True, exist_ok=True)
-        ruta_descarga_datos: Path = directorio_descargas_datos / nombre_archivo
+        filename: str = f"010_archv.{year}_{day}_{hour:02d}_2d.nc"
+        output_directory: Path = Path(f"datos_hycomm_1_100/{year}")
+        output_directory.mkdir(parents=True, exist_ok=True)
+        output_file: Path = output_directory / filename
 
         # Crear URL
-        url: str = f"https://tds.hycom.org/thredds/fileServer/datasets/GOMb0.01/reanalysis/data/{anio}/{nombre_archivo}"
-        url_datos: httpx.URL = httpx.URL(url)
-        logger.info(f"Procesando: {ruta_descarga_datos}")
+        url: str = f"https://tds.hycom.org/thredds/fileServer/datasets/GOMb0.01/reanalysis/data/{year}/{filename}"
+        data_url: httpx.URL = httpx.URL(url)
 
         # Verifica si el archivo ya existe
-        if ruta_descarga_datos.exists():
+        if output_file.exists():
             logger.info(
-                f"Archivo ya existe: {nombre_archivo}, no se descargará de nuevo..."
+                f"File exists: {filename}, skipping downloaded..."
             )
-            fecha += relativedelta(hours=1)  # Avanzar a la siguiente hora
+            current_date += relativedelta(hours=1)  # Avanzar a la siguiente hora
             continue
 
         # Intentar descargar el archivo con reintentos limitados
-        estatus = Descarga.FALLIDA
-        reintentos = 0
-        while estatus == Descarga.FALLIDA and reintentos <= REINTENTOS_MAXIMOS:
-            estatus = descargar_datos_hycomm(url_datos, ruta_descarga_datos)
-            if estatus == Descarga.FALLIDA:
-                reintentos += 1
-                if reintentos <= REINTENTOS_MAXIMOS:
+        status: DownloadStatus = DownloadStatus.FAIL
+        retry: int = 0
+        while status == DownloadStatus.FAIL and retry <= download_settings.retries_number:
+            status = descargar_datos_hycomm(data_url, output_file, download_settings)
+            if status == DownloadStatus.FAIL:
+                retry += 1
+                if retry <= download_settings.retries_number:
                     logger.warning(
-                        f"Reintento {reintentos}/{REINTENTOS_MAXIMOS} en {TIEMPO_ESPERA} segundos..."
+                        f"Retry {retry}/{download_settings.retries_number} in {download_settings.sleep_time} seconds..."
                     )
-                    time.sleep(TIEMPO_ESPERA)
+                    time.sleep(download_settings.sleep_time)
                 else:
                     logger.error(
-                        f"Falló después de {REINTENTOS_MAXIMOS} reintentos: {nombre_archivo}"
+                        f"Download failed after {download_settings.retries_number} retries: {filename}"
                     )
-                    archivos_fallidos += 1
+                    failed_files += 1
 
         # Contador de archivos descargados exitosamente
-        if estatus == Descarga.EXITOSA:
-            archivos_descargados += 1
+        if status == DownloadStatus.SUCESS:
+            downloaded_files += 1
 
         # Avanzar a la siguiente hora
-        fecha += relativedelta(hours=1)
+        current_date += relativedelta(hours=1)
 
     # Resumen final
     logger.info("=" * 50)
-    logger.info("RESUMEN DE DESCARGA")
-    logger.info(f"Archivos procesados: {archivos_procesados}")
-    logger.info(f"Archivos descargados: {archivos_descargados}")
+    logger.info("Download Summary")
+    logger.info(f"Processed files: {processed_files}")
+    logger.info(f"Downloaded files: {downloaded_files}")
     logger.info(
-        f"Archivos que ya existían: {archivos_procesados - archivos_descargados - archivos_fallidos}"
+        f"Existing files: {processed_files - downloaded_files - failed_files}"
     )
-    logger.info(f"Archivos fallidos: {archivos_fallidos}")
+    logger.info(f"Failed files: {failed_files}")
     logger.info("=" * 50)
 
 
