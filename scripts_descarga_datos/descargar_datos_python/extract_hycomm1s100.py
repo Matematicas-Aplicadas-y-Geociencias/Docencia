@@ -60,7 +60,9 @@ def descargar_datos_hycomm(
                         desc=f"Downloading {filename}",
                     ) as pbar:
                         downloaded = 0
-                        for chunk in response.iter_bytes(chunk_size=download_settings.chunk_size):
+                        for chunk in response.iter_bytes(
+                            chunk_size=download_settings.chunk_size
+                        ):
                             if chunk:
                                 f.write(chunk)
                                 downloaded += len(chunk)
@@ -95,13 +97,10 @@ def main() -> None:
         sys.exit(1)
 
     download_settings: DownloadSettings = DownloadSettings(
-        chunk_size = 512 * 1024,
-        sleep_time = 8,
-        timeout = 300.0,
-        retries_number = 10
+        chunk_size=512 * 1024, sleep_time=8, timeout=300.0, retries_number=10
     )
 
-    current_date = data_start_date # Variable de control del ciclo while
+    current_date = data_start_date  # Variable de control del ciclo while
     processed_files: int = 0  # Contador de archivos procesados
     downloaded_files: int = 0  # Contador de archivos descargados
     failed_files: int = 0  # Contador de archivos no descargados
@@ -126,16 +125,16 @@ def main() -> None:
 
         # Verifica si el archivo ya existe
         if output_file.exists():
-            logger.info(
-                f"File exists: {filename}, skipping downloaded..."
-            )
+            logger.info(f"File exists: {filename}, skipping downloaded...")
             current_date += relativedelta(hours=1)  # Avanzar a la siguiente hora
             continue
 
         # Intentar descargar el archivo con reintentos limitados
         status: DownloadStatus = DownloadStatus.FAIL
         retry: int = 0
-        while status == DownloadStatus.FAIL and retry <= download_settings.retries_number:
+        while (
+            status == DownloadStatus.FAIL and retry <= download_settings.retries_number
+        ):
             status = descargar_datos_hycomm(data_url, output_file, download_settings)
             if status == DownloadStatus.FAIL:
                 retry += 1
@@ -162,9 +161,7 @@ def main() -> None:
     logger.info("Download Summary")
     logger.info(f"Processed files: {processed_files}")
     logger.info(f"Downloaded files: {downloaded_files}")
-    logger.info(
-        f"Existing files: {processed_files - downloaded_files - failed_files}"
-    )
+    logger.info(f"Existing files: {processed_files - downloaded_files - failed_files}")
     logger.info(f"Failed files: {failed_files}")
     logger.info("=" * 50)
 
