@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pickletools import float8
 import httpx
 import aiofiles
 import asyncio
@@ -27,12 +28,16 @@ class DownloadStatus(Enum):
 @dataclass(frozen=True)
 class DownloadSettings:
     chunk_size: int = 512 * 1024
-    sleep_time: int = 8
-    timeout: float = 300.0
-    retries_number: int = 10
+    connect: float = 180.0
+    read: float = 300.0
+    write: float = 300.0
+    pool: float = 300.0
+    max_keepalive_connections: int = 3
+    max_connections: int = 8
+    max_concurrent: int = 5
 
 
-async def descargar_datos_hycomm(
+async def downloader(
     client: httpx.AsyncClient,
     semaphore: asyncio.Semaphore,
     data_url: httpx.URL,
@@ -81,8 +86,33 @@ async def descargar_datos_hycomm(
         return DownloadStatus.FAILED
 
 
-def download_bulk_data(download_settings: DownloadSettings):
-    with httpx.Client(timeout=download_settings.timeout) as client:
+async def download_data(
+    download_settings: DownloadSettings,
+    url_list: list[str],
+    output_file_list: list[Path],
+):
+    # Configuración del cliente
+    timeout: httpx.Timeout = httpx.Timeout(
+        connect=download_settings.connect,
+        read=download_settings.read,
+        write=download_settings.write,
+        pool=download_settings.pool,
+    )
+    limits: httpx.Limits = httpx.Limits(
+        max_keepalive_connections=download_settings.max_keepalive_connections,
+        max_connections=download_settings.max_connections,
+    )
+    # Creacion del semaforo
+    semaphore: asyncio.Semaphore = asyncio.Semaphore(download_settings.max_concurrent)
+
+    async with httpx.AsyncClient(timeout=timeout, limits=limits) as client:
+        tasks = [
+            asyncio.create_task(
+                downloader(client, semaphore, url, output_file, download_settings)
+            )
+            for url, output_file in zip(url_list, output_file_list)
+        ]
+        return await asyncio.gather(*tasks, return_exceptions=True)
 
 
 def parse_date_range(start_date: str, end_date: str) -> tuple[datetime, datetime]:
@@ -146,8 +176,8 @@ def download_with_retries(
 
 
 def main() -> None:
-    start_date: str = "2001-365-20"
-    end_date: str = "2002-001-08"
+    start_date: str = "2001-355-10"
+    end_date: str = "2001-355-14"
 
     try:
         data_start_date, data_end_date = parse_date_range(start_date, end_date)
@@ -161,6 +191,8 @@ def main() -> None:
     downloaded_files: int = 0  # Contador de archivos descargados
     failed_files: int = 0  # Contador de archivos no descargados
     existing_files: int = 0  # Contador de archivos existentes
+    url_list = []
+    output_file_list = []
 
     while current_date <= data_end_date:
         processed_files += 1
@@ -177,17 +209,21 @@ def main() -> None:
         # Crear URL
         data_url = create_download_url(filename, current_date.year)
 
-        # Intentar descargar el archivo con reintentos limitados
-        status = download_with_retries(data_url, output_file, download_settings)
-
-        # Contador de archivos descargados exitosamente
-        if status == DownloadStatus.SUCCESS:
-            downloaded_files += 1
-        else:
-            failed_files += 1
+        url_list.append(data_url)
+        output_file_list.append(output_file)
 
         # Avanzar a la siguiente hora
         current_date += relativedelta(hours=1)
+
+    asyncio.run(download_data(download_settings, url_list, output_file_list))
+    # Intentar descargar el archivo con reintentos limitados
+    # status = download_with_retries(data_url, output_file, download_settings)
+
+    # Contador de archivos descargados exitosamente
+    # if status == DownloadStatus.SUCCESS:
+    #     downloaded_files += 1
+    # else:
+    #     failed_files += 1
 
     # Resumen final
     logger.info("=" * 50)
