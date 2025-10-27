@@ -1,14 +1,11 @@
 from dataclasses import dataclass
-from pickletools import float8
 import httpx
 import aiofiles
 import asyncio
 from pathlib import Path
 from datetime import datetime
-import time
 from dateutil.relativedelta import relativedelta
 import logging
-from tqdm import tqdm
 from enum import Enum
 import sys
 
@@ -88,7 +85,7 @@ async def downloader(
 
 async def download_data(
     download_settings: DownloadSettings,
-    url_list: list[str],
+    url_list: list[httpx.URL],
     output_file_list: list[Path],
 ):
     # Configuración del cliente
@@ -150,34 +147,9 @@ def create_download_url(filename: str, year: int) -> httpx.URL:
     return httpx.URL(url)
 
 
-def download_with_retries(
-    data_url: httpx.URL,
-    output_file: Path,
-    download_settings: DownloadSettings,
-) -> DownloadStatus:
-    # Intentar descargar el archivo con reintentos limitados
-    status: DownloadStatus = DownloadStatus.FAILED
-    retry: int = 0
-    while status == DownloadStatus.FAILED and retry <= download_settings.retries_number:
-        status = descargar_datos_hycomm(data_url, output_file, download_settings)
-        if status == DownloadStatus.FAILED:
-            retry += 1
-            if retry <= download_settings.retries_number:
-                logger.warning(
-                    f"Retry {retry}/{download_settings.retries_number} in {download_settings.sleep_time} seconds..."
-                )
-                time.sleep(download_settings.sleep_time)
-            else:
-                logger.error(
-                    f"Download failed after {download_settings.retries_number} retries: {output_file.name}"
-                )
-
-    return status
-
-
 def main() -> None:
-    start_date: str = "2001-355-10"
-    end_date: str = "2001-355-14"
+    start_date: str = "2002-365-22"
+    end_date: str = "2003-002-05"
 
     try:
         data_start_date, data_end_date = parse_date_range(start_date, end_date)
@@ -191,8 +163,8 @@ def main() -> None:
     downloaded_files: int = 0  # Contador de archivos descargados
     failed_files: int = 0  # Contador de archivos no descargados
     existing_files: int = 0  # Contador de archivos existentes
-    url_list = []
-    output_file_list = []
+    url_list: list[httpx.URL] = []
+    output_file_list: list[Path] = []
 
     while current_date <= data_end_date:
         processed_files += 1
