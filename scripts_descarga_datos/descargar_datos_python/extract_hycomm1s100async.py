@@ -7,7 +7,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import logging
 from enum import Enum
-import sys
 
 # Configurar logging
 logging.basicConfig(
@@ -112,53 +111,51 @@ async def download_data(
         return await asyncio.gather(*tasks, return_exceptions=True)
 
 
-def parse_date_range(start_date: str, end_date: str) -> tuple[datetime, datetime]:
-    try:
-        data_start_date: datetime = datetime.strptime(start_date, "%Y-%j-%H")
-        data_end_date: datetime = datetime.strptime(end_date, "%Y-%j-%H")
-
-        if data_start_date > data_end_date:
-            raise ValueError("Start date must be before end date")
-
-        return data_start_date, data_end_date
-    except ValueError as e:
-        logger.error(f"Date parsing error: {e}")
-        raise
-
-
-def create_file_info(current_date: datetime) -> tuple[str, Path]:
+def get_filename(date: datetime) -> str:
     # Extraer componentes de fecha
-    year: int = current_date.year
-    day: str = current_date.strftime("%j")
-    hour: int = current_date.hour
+    year: int = date.year
+    day: str = date.strftime("%j")
+    hour: int = date.hour
 
-    # Crear nombre de archivo y rutas
+    # Crear nombre de archivo
     filename: str = f"010_archv.{year}_{day}_{hour:02d}_2d.nc"
-    output_directory: Path = Path(f"datos_hycomm_1_100/{year}")
+
+    return filename
+
+
+def create_output_directory(base_directory: Path, date: datetime) -> Path:
+    # Extraer componentes de fecha
+    year: str = str(date.year)
+
+    # rutas
+    output_directory: Path = base_directory / year
     output_directory.mkdir(parents=True, exist_ok=True)
-    output_file: Path = output_directory / filename
 
-    return filename, output_file
+    return output_directory
 
 
-def create_download_url(filename: str, year: int) -> httpx.URL:
+def create_download_url(filename: str, date: datetime) -> httpx.URL:
     # Crear URL
+    year: int = date.year
     url: str = f"https://tds.hycom.org/thredds/fileServer/datasets/GOMb0.01/reanalysis/data/{year}/{filename}"
     return httpx.URL(url)
 
 
 def main() -> None:
-    start_date: str = "2002-365-22"
-    end_date: str = "2003-002-05"
+    start_date_string: str = "2002-365-22"
+    end_date_string: str = "2003-002-05"
+    format: str = "%Y-%j-%H"
+    base_directory: Path = Path("datos_hycomm_1_100")
 
-    try:
-        data_start_date, data_end_date = parse_date_range(start_date, end_date)
-    except ValueError:
-        sys.exit(1)
+    start_date: datetime = datetime.strptime(start_date_string, format)
+    end_date: datetime = datetime.strptime(end_date_string, format)
+
+    if start_date > end_date:
+        raise ValueError("Start date must be before end date")
 
     download_settings: DownloadSettings = DownloadSettings()
 
-    current_date = data_start_date  # Variable de control del ciclo while
+    current_date: datetime = start_date  # Variable de control del ciclo while
     processed_files: int = 0  # Contador de archivos procesados
     downloaded_files: int = 0  # Contador de archivos descargados
     failed_files: int = 0  # Contador de archivos no descargados
@@ -166,10 +163,12 @@ def main() -> None:
     url_list: list[httpx.URL] = []
     output_file_list: list[Path] = []
 
-    while current_date <= data_end_date:
+    while current_date <= end_date:
         processed_files += 1
 
-        filename, output_file = create_file_info(current_date)
+        filename = get_filename(current_date)
+        output_directory = create_output_directory(base_directory, current_date)
+        output_file: Path = output_directory / filename
 
         # Verifica si el archivo ya existe
         if output_file.exists():
@@ -179,7 +178,7 @@ def main() -> None:
             continue
 
         # Crear URL
-        data_url = create_download_url(filename, current_date.year)
+        data_url = create_download_url(filename, current_date)
 
         url_list.append(data_url)
         output_file_list.append(output_file)
