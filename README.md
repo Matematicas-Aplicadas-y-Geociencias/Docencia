@@ -13,7 +13,7 @@
 ### Semestre 2
 *proximamente*
 ### Semestre 3
-*proximamente*
+[Introducción a la Geodinámica](https://github.com/Matematicas-Aplicadas-y-Geociencias/Introduccion-a-la-Geodinamica?tab=readme-ov-file)
 ### Semestre 4
 *proximamente*
 ### Semestre 5
@@ -21,7 +21,7 @@
 ### Semestre 6
 *proximamente*
 ### Semestre 7
-[Taller de Investigación en Ciencias Ambientales I](https://github.com/ENES-Merida/taller-de-investigacion-en-ciencias-ambientales-I?tab=readme-ov-file)
+[Taller de Investigación en Ciencias Ambientales I](https://github.com/Matematicas-Aplicadas-y-Geociencias/taller-de-investigacion-en-ciencias-ambientales-I?tab=readme-ov-file)
 ### Semestre 8
 *proximamente*
 ### Semestre 9
