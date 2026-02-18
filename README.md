@@ -19,7 +19,7 @@
 ### Semestre 5
 *proximamente*
 ### Semestre 6
-*proximamente*
+[Computación y Análisis de Datos Geofísicos](https://github.com/Matematicas-Aplicadas-y-Geociencias/computacion-analisis-datos-geofisicos?tab=readme-ov-file)
 ### Semestre 7
 [Taller de Investigación en Ciencias Ambientales I](https://github.com/Matematicas-Aplicadas-y-Geociencias/taller-de-investigacion-en-ciencias-ambientales-I?tab=readme-ov-file)
 ### Semestre 8
