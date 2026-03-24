@@ -1,3 +1,24 @@
+"""
+HYCOM-TSIS 1/25° Gulf of Mexico Reanalysis (GOMe0.04)
+
+    Title: HYCOM-TSIS GOMe0.04
+    Resolution: 1/25% (~4km)
+    Domain: Extends from 98°E to 77°E in longitude and from 18°N to 32°N in latitude
+    Date/Data Range: 2024-09-02 to Present (1-6 month delay)
+    HYCOM version: 2.3.01
+
+    Experiment numbers (daily netcdf):
+
+        YYYY: year, DDD: day, NN: Netcdf type (i.e. 2d or 3z)
+        HYCOM-TSIS GOMe0.04:
+
+        gomb4_daily_YYYY_DDD_NN.nc: 2024_246 to Present
+
+    URL de los datos:
+        https://www.hycom.org/data/gome0pt04/gom-reanalysis
+        https://data.hycom.org/datasets/GOMe0.04/expt_03.9/data/daily_netcdf/
+"""
+
 import logging
 import sys
 import time
@@ -197,8 +218,8 @@ def parse_and_validate_date_range(
     """
 
     try:
-        data_start_date: datetime = datetime.strptime(start_date, "%Y-%j-%H")
-        data_end_date: datetime = datetime.strptime(end_date, "%Y-%j-%H")
+        data_start_date: datetime = datetime.strptime(start_date, "%Y-%j")
+        data_end_date: datetime = datetime.strptime(end_date, "%Y-%j")
 
         if data_start_date > data_end_date:
             raise ValueError("Start date must be before end date")
@@ -212,8 +233,8 @@ def parse_and_validate_date_range(
 def create_file_info(current_date: datetime) -> Path:
     """Construye la ruta de salida para un archivo NetCDF dado una fecha.
 
-    El nombre sigue la convención HYCOM: 010_archv.{año}_{día}_{hora}_2d.nc
-    El directorio de salida se organiza por año bajo datos_hycomm_1_100/.
+    El nombre sigue la convención HYCOM: gomb4_daily_{año}_{día}_2d.nc
+    El directorio de salida se organiza por año bajo datos_hycomm_1_25/.
 
     Args:
         current_date: Fecha y hora del archivo a construir.
@@ -224,10 +245,9 @@ def create_file_info(current_date: datetime) -> Path:
 
     year: int = current_date.year
     day: str = current_date.strftime("%j")
-    hour: int = current_date.hour
 
-    filename: str = f"010_archv.{year}_{day}_{hour:02d}_2d.nc"
-    output_directory: Path = Path(f"datos_hycomm_1_100/{year}")
+    filename: str = f"gomb4_daily_{year}_{day}_2d.nc"
+    output_directory: Path = Path(f"datos_hycomm_1_25/{year}")
     output_file: Path = output_directory / filename
 
     return output_file
@@ -241,10 +261,11 @@ def create_download_url(filename: str, year: int) -> httpx.URL:
         year: Año del archivo, usado para construir la ruta en el servidor.
 
     Returns:
-        URL completa del archivo en el servidor THREDDS de HYCOM.
+        URL completa del archivo en el servidor DATA de HYCOM.
     """
 
-    url: str = f"https://tds.hycom.org/thredds/fileServer/datasets/GOMb0.01/reanalysis/data/{year}/{filename}"
+    # https://data.hycom.org/datasets/GOMe0.04/expt_03.9/data/daily_netcdf/2024/gomb4_daily_2024_246_2d.nc
+    url: str = f"https://data.hycom.org/datasets/GOMe0.04/expt_03.9/data/daily_netcdf/{year}/{filename}"
     return httpx.URL(url)
 
 
@@ -256,8 +277,8 @@ def main() -> None:
     registra un resumen al finalizar.
     """
 
-    start_date: str = "2001-365-16"
-    end_date: str = "2002-001-12"
+    start_date: str = "2024-247"
+    end_date: str = "2024-255"
 
     try:
         data_start_date, data_end_date = parse_and_validate_date_range(
@@ -285,7 +306,7 @@ def main() -> None:
         if output_file.exists():
             logger.info(f"File exists: {filename}, skipping download...")
             existing_files += 1
-            current_date += relativedelta(hours=1)  # Avanzar a la siguiente hora
+            current_date += relativedelta(days=1)  # Avanzar al siguiente dia
             continue
 
         data_url = create_download_url(filename, current_date.year)
@@ -297,7 +318,7 @@ def main() -> None:
         else:
             failed_files += 1
 
-        current_date += relativedelta(hours=1)
+        current_date += relativedelta(days=1)
 
     # Resumen final del proceso de descarga
     logger.info("=" * 50)

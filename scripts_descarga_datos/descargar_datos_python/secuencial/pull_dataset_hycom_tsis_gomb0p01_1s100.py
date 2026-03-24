@@ -1,3 +1,27 @@
+"""
+HYCOM-TSIS 1/100° Gulf of Mexico Reanalysis
+
+    Title: HYCOM-TSIS GOMb0.01
+    Resolution: 1/100% (~1km)
+    Domain: Extends from 98°E to 77°E in longitude and from 18°N to 32°N in latitude
+    Date/Data Range: 2001-01-16 to 2024-04-28
+    HYCOM version: 2.3.01
+
+    Experiment numbers:
+
+        YYYY: year, DDD: day, HH: hour, NN: Netcdf type (i.e. 2d or 3z)
+        HYCOM-TSIS GOMb0.01:
+
+        010_archv.YYYY_DDD_HH_NN.nc: 2001_016_00 to 2017_152_18
+        023_archv.YYYY_DDD_HH_NN.nc: 2017_152_19 to 2024_001_18
+        026_archv.YYYY_DDD_HH_NN.nc: 2024_001_19 to 2024_119_23
+        027_archv.YYYY_DDD_HH_NN.nc: 2024_092_19 to 2024_245_18 (Date range: 2024-04-01 to 2024-09-01)
+
+    URL de los datos:
+        https://www.hycom.org/data/gomb0pt01/gom-reanalysis
+        https://tds.hycom.org/thredds/catalog/datasets/GOMb0.01/reanalysis/data/catalog.html
+"""
+
 import logging
 import sys
 import time
@@ -197,8 +221,8 @@ def parse_and_validate_date_range(
     """
 
     try:
-        data_start_date: datetime = datetime.strptime(start_date, "%Y-%j")
-        data_end_date: datetime = datetime.strptime(end_date, "%Y-%j")
+        data_start_date: datetime = datetime.strptime(start_date, "%Y-%j-%H")
+        data_end_date: datetime = datetime.strptime(end_date, "%Y-%j-%H")
 
         if data_start_date > data_end_date:
             raise ValueError("Start date must be before end date")
@@ -212,8 +236,8 @@ def parse_and_validate_date_range(
 def create_file_info(current_date: datetime) -> Path:
     """Construye la ruta de salida para un archivo NetCDF dado una fecha.
 
-    El nombre sigue la convención HYCOM: gomb4_daily_{año}_{día}_2d.nc
-    El directorio de salida se organiza por año bajo datos_hycomm_1_25/.
+    El nombre sigue la convención HYCOM: 010_archv.{año}_{día}_{hora}_2d.nc
+    El directorio de salida se organiza por año bajo datos_hycomm_1_100/.
 
     Args:
         current_date: Fecha y hora del archivo a construir.
@@ -224,9 +248,10 @@ def create_file_info(current_date: datetime) -> Path:
 
     year: int = current_date.year
     day: str = current_date.strftime("%j")
+    hour: int = current_date.hour
 
-    filename: str = f"gomb4_daily_{year}_{day}_2d.nc"
-    output_directory: Path = Path(f"datos_hycomm_1_25/{year}")
+    filename: str = f"010_archv.{year}_{day}_{hour:02d}_2d.nc"
+    output_directory: Path = Path(f"datos_hycomm_1_100/{year}")
     output_file: Path = output_directory / filename
 
     return output_file
@@ -240,11 +265,10 @@ def create_download_url(filename: str, year: int) -> httpx.URL:
         year: Año del archivo, usado para construir la ruta en el servidor.
 
     Returns:
-        URL completa del archivo en el servidor DATA de HYCOM.
+        URL completa del archivo en el servidor THREDDS de HYCOM.
     """
 
-    # https://data.hycom.org/datasets/GOMe0.04/expt_03.9/data/daily_netcdf/2024/gomb4_daily_2024_246_2d.nc
-    url: str = f"https://data.hycom.org/datasets/GOMe0.04/expt_03.9/data/daily_netcdf/{year}/{filename}"
+    url: str = f"https://tds.hycom.org/thredds/fileServer/datasets/GOMb0.01/reanalysis/data/{year}/{filename}"
     return httpx.URL(url)
 
 
@@ -256,8 +280,8 @@ def main() -> None:
     registra un resumen al finalizar.
     """
 
-    start_date: str = "2024-248"
-    end_date: str = "2024-253"
+    start_date: str = "2001-365-15"
+    end_date: str = "2002-001-14"
 
     try:
         data_start_date, data_end_date = parse_and_validate_date_range(
@@ -285,7 +309,7 @@ def main() -> None:
         if output_file.exists():
             logger.info(f"File exists: {filename}, skipping download...")
             existing_files += 1
-            current_date += relativedelta(days=1)  # Avanzar al siguiente dia
+            current_date += relativedelta(hours=1)  # Avanzar a la siguiente hora
             continue
 
         data_url = create_download_url(filename, current_date.year)
@@ -297,7 +321,7 @@ def main() -> None:
         else:
             failed_files += 1
 
-        current_date += relativedelta(days=1)
+        current_date += relativedelta(hours=1)
 
     # Resumen final del proceso de descarga
     logger.info("=" * 50)
