@@ -50,6 +50,17 @@ class DownloadStatus(Enum):
 
 @dataclass(frozen=True)
 class ConnectionSettings:
+    """Configuración inmutable para el cliente HTTP.
+
+    Attributes:
+        connect: Tiempo máximo en segundos para establecer la conexión.
+        read: Tiempo máximo en segundos para leer la respuesta.
+        write: Tiempo máximo en segundos para enviar la petición.
+        pool: Tiempo máximo en segundos para obtener una conexión del pool.
+        max_keepalive_connections: Número máximo de conexiones persistentes en el pool.
+        max_connections: Número máximo total de conexiones simultáneas.
+    """
+
     connect: float = 180.0
     read: float = 300.0
     write: float = 300.0
@@ -76,6 +87,16 @@ async def stream_to_file(
     output_file: Path,
     chunk_size: int,
 ) -> int:
+    """Escribe el contenido de una respuesta HTTP en disco usando streaming.
+
+    Args:
+        response: Respuesta HTTP activa con streaming habilitado.
+        output_file: Ruta del archivo de destino.
+        chunk_size: Tamaño de cada fragmento leído en bytes.
+
+    Returns:
+        Total de bytes escritos a disco.
+    """
     downloaded: int = 0
 
     async with aiofiles.open(output_file, "wb") as f:
@@ -94,10 +115,23 @@ async def request_data(
     output_file: Path,
     download_settings: DownloadSettings,
 ) -> DownloadStatus:
+    """Realiza la petición HTTP y delega la escritura del archivo.
+
+    Usa streaming para manejar archivos grandes sin cargarlos en memoria.
+    El semáforo limita el número de descargas simultáneas.
+
+    Args:
+        client: Cliente HTTP asíncrono compartido entre tareas.
+        semaphore: Semáforo para controlar la concurrencia de descargas.
+        data_url: URL del archivo a descargar.
+        output_file: Ruta donde se guardará el archivo.
+        download_settings: Configuración de la descarga.
+
+    Returns:
+        DownloadStatus.SUCCESS si la descarga completó correctamente,
+        DownloadStatus.FAILED en caso de error.
     """
-    Descarga un archivo NetCDF grande usando streaming
-    con barra de progreso
-    """
+
     filename: str = output_file.name
 
     try:
@@ -119,12 +153,14 @@ async def request_data(
         return DownloadStatus.SUCCESS
 
     except httpx.RequestError as e:
+        # Errores de red: timeout, conexión rechazada, DNS
         logger.error(f"Request error for {filename}: {e}")
         return DownloadStatus.FAILED
     except httpx.HTTPStatusError as e:
         logger.error(f"HTTP error {e.response.status_code} for {filename}: {e}")
         return DownloadStatus.FAILED
     except Exception as e:
+        # Red de seguridad para errores inesperados
         logger.error(f"Unexpected error downloading {filename}: {e}")
         return DownloadStatus.FAILED
 
@@ -135,7 +171,23 @@ async def download_data(
     download_settings: DownloadSettings,
     connection_settings: ConnectionSettings,
 ) -> list[DownloadStatus | BaseException]:
-    # Configuración del cliente
+    """Descarga múltiples archivos de forma concurrente.
+
+    Construye el cliente HTTP, el semáforo y lanza todas las tareas
+    en paralelo usando asyncio.gather.
+
+    Args:
+        url_list: Lista de URLs a descargar.
+        output_file_list: Lista de rutas de destino, en el mismo orden que url_list.
+        download_settings: Configuración de descarga (chunk size, concurrencia).
+        connection_settings: Configuración del cliente HTTP (timeouts, pool).
+
+    Returns:
+        Lista de resultados en el mismo orden que url_list. Cada elemento es
+        DownloadStatus.SUCCESS, DownloadStatus.FAILED, o una excepción si
+        return_exceptions=True la capturó.
+    """
+
     timeout: httpx.Timeout = httpx.Timeout(
         connect=connection_settings.connect,
         read=connection_settings.read,
@@ -146,7 +198,7 @@ async def download_data(
         max_keepalive_connections=connection_settings.max_keepalive_connections,
         max_connections=connection_settings.max_connections,
     )
-    # Creacion del semaforo
+    # Limita el número de descargas simultáneas independientemente del pool HTTP
     semaphore: asyncio.Semaphore = asyncio.Semaphore(download_settings.max_concurrent)
 
     async with httpx.AsyncClient(timeout=timeout, limits=limits) as client:
@@ -163,9 +215,10 @@ def create_filename_info(base_directory: Path, current_date: datetime) -> Path:
     """Construye la ruta de salida para un archivo NetCDF dado una fecha.
 
     El nombre sigue la convención HYCOM: 010_archv.{año}_{día}_{hora}_2d.nc
-    El directorio de salida se organiza por año bajo datos_hycomm_1_100/.
+    El directorio de salida se organiza por año bajo base_directory.
 
     Args:
+        base_directory: Directorio raíz donde se guardan los archivos.
         current_date: Fecha y hora del archivo a construir.
 
     Returns:
@@ -176,7 +229,7 @@ def create_filename_info(base_directory: Path, current_date: datetime) -> Path:
     day: str = current_date.strftime("%j")
     hour: int = current_date.hour
 
-    # Crear nombre de archivo
+    # Nombre de archivo siguiendo la convención HYCOM
     filename: str = f"010_archv.{year}_{day}_{hour:02d}_2d.nc"
     output_directory: Path = base_directory / f"{year}"
     output_file: Path = output_directory / filename
@@ -209,6 +262,7 @@ def parse_and_validate_date_range(
     Args:
         start_date: Fecha de inicio como string, e.g. "2001-365-18".
         end_date: Fecha de fin como string, e.g. "2002-001-11".
+        date_format: Formato strptime para parsear las fechas.
 
     Returns:
         Tupla (start, end) como objetos datetime.
@@ -233,9 +287,10 @@ def parse_and_validate_date_range(
 def main() -> None:
     """Punto de entrada principal del script de descarga HYCOM.
 
-    Itera hora a hora entre start_date y end_date, descargando los archivos
-    NetCDF correspondientes. Omite archivos que ya existen en disco y
-    registra un resumen al finalizar.
+    Itera hora a hora entre start_date y end_date, construye las listas
+    de URLs y rutas de salida omitiendo archivos ya existentes, y lanza
+    todas las descargas de forma concurrente. Registra un resumen al finalizar.
+
     """
 
     start_date_string: str = "2002-365-08"
@@ -255,9 +310,9 @@ def main() -> None:
 
     current_date: datetime = start_date  # Variable de control del ciclo while
     processed_files: int = 0  # Contador de archivos procesados
-    downloaded_files: int = 0  # Contador de archivos descargados
-    failed_files: int = 0  # Contador de archivos no descargados
-    existing_files: int = 0  # Contador de archivos existentes
+    downloaded_files: int = 0  # Contador de archivos descargados exitosamente
+    failed_files: int = 0  # Contador de archivos con fallo en descarga
+    existing_files: int = 0  # Contador de archivos ya existentes en disco
     url_list: list[httpx.URL] = []
     output_file_list: list[Path] = []
 
@@ -268,20 +323,18 @@ def main() -> None:
         output_file.parent.mkdir(parents=True, exist_ok=True)
         filename = output_file.name
 
-        # Verifica si el archivo ya existe
+        # Omitir archivos ya descargados en ejecuciones anteriores
         if output_file.exists():
             logger.info(f"File exists: {filename}, skipping download...")
             existing_files += 1
             current_date += relativedelta(hours=1)  # Avanzar a la siguiente hora
             continue
 
-        # Crear URL
         data_url = create_download_url(filename, current_date.year)
 
         url_list.append(data_url)
         output_file_list.append(output_file)
 
-        # Avanzar a la siguiente hora
         current_date += relativedelta(hours=1)
 
     status = asyncio.run(
@@ -290,14 +343,14 @@ def main() -> None:
         )
     )
 
-    # Contador de archivos descargados exitosamente
+    # Contabilizar resultados de cada tarea
     for result in status:
         if result == DownloadStatus.SUCCESS:
             downloaded_files += 1
         else:
             failed_files += 1
 
-    # Resumen final
+    # Resumen final del proceso
     logger.info("=" * 50)
     logger.info("Download Summary")
     logger.info(f"Processed files: {processed_files}")
