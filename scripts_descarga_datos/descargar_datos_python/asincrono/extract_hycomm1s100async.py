@@ -74,14 +74,12 @@ class DownloadSettings:
 async def stream_to_file(
     response: httpx.Response,
     output_file: Path,
-    download_settings: DownloadSettings,
+    chunk_size: int,
 ) -> int:
     downloaded: int = 0
 
     async with aiofiles.open(output_file, "wb") as f:
-        async for chunk in response.aiter_bytes(
-            chunk_size=download_settings.chunk_size
-        ):
+        async for chunk in response.aiter_bytes(chunk_size=chunk_size):
             if chunk:
                 await f.write(chunk)
                 downloaded += len(chunk)
@@ -111,7 +109,7 @@ async def request_data(
                 # Obtener tamaño total si está disponible
                 # total_size: int = int(response.headers.get("content-length", 0))
                 downloaded = await stream_to_file(
-                    response, output_file, download_settings
+                    response, output_file, download_settings.chunk_size
                 )
 
         logger.info(
@@ -240,8 +238,8 @@ def main() -> None:
     registra un resumen al finalizar.
     """
 
-    start_date_string: str = "2002-365-15"
-    end_date_string: str = "2003-001-15"
+    start_date_string: str = "2002-365-08"
+    end_date_string: str = "2003-001-21"
     date_format: str = "%Y-%j-%H"
     base_directory: Path = Path("datos_hycomm_1_100")
 
