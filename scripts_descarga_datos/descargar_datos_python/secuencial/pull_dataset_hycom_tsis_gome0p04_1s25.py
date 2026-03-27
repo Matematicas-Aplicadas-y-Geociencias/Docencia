@@ -200,15 +200,16 @@ def download_data(
 
 
 def parse_and_validate_date_range(
-    start_date: str, end_date: str
+    start_date: str, end_date: str, date_format: str
 ) -> tuple[datetime, datetime]:
     """Parsea y valida un rango de fechas en formato HYCOM.
 
-    El formato esperado es %Y-%j-%H (año-día_juliano-hora).
+    El formato esperado es %Y-%j (año-día_juliano).
 
     Args:
-        start_date: Fecha de inicio como string, e.g. "2001-365-18".
-        end_date: Fecha de fin como string, e.g. "2002-001-11".
+        start_date: Fecha de inicio como string, e.g. "2001-365".
+        end_date: Fecha de fin como string, e.g. "2002-001".
+        date_format: Formato strptime para parsear las fechas.
 
     Returns:
         Tupla (start, end) como objetos datetime.
@@ -218,8 +219,8 @@ def parse_and_validate_date_range(
     """
 
     try:
-        data_start_date: datetime = datetime.strptime(start_date, "%Y-%j")
-        data_end_date: datetime = datetime.strptime(end_date, "%Y-%j")
+        data_start_date: datetime = datetime.strptime(start_date, date_format)
+        data_end_date: datetime = datetime.strptime(end_date, date_format)
 
         if data_start_date > data_end_date:
             raise ValueError("Start date must be before end date")
@@ -277,12 +278,13 @@ def main() -> None:
     registra un resumen al finalizar.
     """
 
-    start_date: str = "2024-247"
-    end_date: str = "2024-255"
+    start_date: str = "2024-364"
+    end_date: str = "2025-002"
+    date_format: str = "%Y-%j"
 
     try:
         data_start_date, data_end_date = parse_and_validate_date_range(
-            start_date, end_date
+            start_date, end_date, date_format
         )
     except ValueError:
         sys.exit(1)
