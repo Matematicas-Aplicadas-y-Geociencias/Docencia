@@ -1,0 +1,382 @@
+\documentclass[12pt,tikz,border=5pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[spanish]{babel}
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+\decimalpoint
+\usepackage{tikz}
+\usepackage{subcaption}
+\usetikzlibrary{babel} 
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{natbib}   
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amssymb} 
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\newtheorem{ejercicio}{Ejercicio}[section]
+
+\doublespacing
+
+\title{Cálculo Diferencial e Integral \\ Licenciatura en Ingeniería en Computación}
+\author{Dr. Julian Bravo \\ M. en C. Edwin Pérez}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Maneras de Representar una Función}
+
+Ejercicios tomados del libro de Cálculo de una Variable Trascendentes Tempranas 4ta Edición\citep{stewart2001calculo}.
+
+\begin{ejercicio}
+  Se da la gráfica de una función $f$ en la figura \ref{fig:ejercicio1p1}. \medskip
+
+  \begin{figure}[h!]
+      \begin{center}
+          \includegraphics[width=0.30\textwidth]{figures/imagenEjercicio1p1.png}
+      \end{center}
+      \caption{Gráfica de una función $f$.}\label{fig:ejercicio1p1}
+  \end{figure}
+
+  \begin{enumerate}[label=(\alph*)]
+    \item Establezca el valor de $f(-1)$.
+      % El valor de $f(-1)=-2$.
+    \item Estime el valor de $f(2)$.
+      % El valor de $f(2)\approx2.9$.
+    \item ¿Para cuáles valores de $x$ se tiene $f(x) = 2$?
+      % Se buscan los puntos que tienen la forma $(x, 2)$ y de acuerdo a la figura \ref{fig:ejercicio1p1}, $x \in \{-3, 1\}$, es decir, $f(-3)=f(1)=2$.
+    \item Estime los valores de $x$ tales que $f(x) = 0$.
+      % Según la figura \ref{fig:ejercicio1p1}, $$f(x) = 0 \text{ cuando } x \approx -2.5 \text{ y } x \approx 0.25.$$
+    \item Establezca el dominio y el rango de $f$.
+      % El dominio de la función $f$ está dada por: $$Dom_{f} = \{x \in \mathbb{R} : -3\leq x \leq 3 \}.$$ También el dominio de $f$ se puede denotar como: $$Dom_{f}= [-3,3].$$
+      % El rango de la función $f$ es:
+      % \begin{align*}
+      %   Im_{f} &= \{y \in \mathbb{R} : -2 \leq y \leq 3\} \\
+      %   &= [-2,3].
+      % \end{align*}
+    \item ¿En qué intervalo es $f$ creciente?
+      % Recuerde que $f$ es creciente en $[a,b]=I$ si para cualquier $x_{1}, x_{2} \in I$ donde $x_{1} < x_{2}$, se cumple que $f(x_{1}) < f(x_{2})$. De modo que al observar la figura \ref{fig:ejercicio1p1} se nota que $f$ crece en $[-1,3]$. \\
+      % ¿En cúal intervalo $f$ es decreciente?
+  \end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}
+  Se proporcionan las gráficas de $f$ y $g$ en la figura \ref{fig:ejercicio1p2}. \medskip
+
+  \begin{figure}[h!]
+      \begin{center}
+          \includegraphics[width=0.30\textwidth]{figures/ejercicio1p2.png}
+      \end{center}
+      \caption{Gráficas de las funciones $f$ y $g$.}\label{fig:ejercicio1p2}
+  \end{figure}
+
+  \begin{enumerate}[label=(\alph*)]
+    \item Dé los valores de $f(-4)$ y $g(3)$.
+      % El valor de $f(-4)=-2$ y de $g(3)=4$.
+    \item ¿Para cuáles valores de $x$ se tiene $f(x)=g(x)$?
+      % Según la figura \ref{fig:ejercicio1p2} los puntos de intersección entre las curvas de $f$ y $g$ son $(-2,1)$ y $(2,2)$, entonces los valores de $x$ cuando $f(x)=g(x)$ son $x=-2$ y $x=2$.
+    \item Estime la solución de la ecuación $f(x)=-1$.
+      % La solución a la ecuación $f(x)=-1$ se puede deducir de la figura \ref{fig:ejercicio1p2} y está dada por: $$\{x \in \mathbb{R} : f(x)=-1 \} = \{-3,4\}$$ es decir $$f(-3)=f(4)=-1.$$
+    \item ¿En qué intervalo $f$ es decreciente?
+      % Por medio de la figura \ref{fig:ejercicio1p2} se deduce que $f$ es decreciente en $[0,4]$. ¿Sobre qué intervalo $f$ es decreciente? ¿Cuáles son los intervalos donde $g$ es creciente y decreciente?
+    \item Establezca el dominio y el rango de $f$.
+      % De acuerdo a la figura \ref{fig:ejercicio1p2}, el dominio de la función $f$ está dada por: $$Dom_{f} = \{x \in \mathbb{R} : -4\leq x \leq 4 \}$$  y la imagen de $f$ es: $$Im_{f} = \{y \in \mathbb{R} : -2 \leq y \leq 3\}.$$
+    \item Establezca el dominio y el rango de $g$.
+      % Al observar la figura \ref{fig:ejercicio1p2}, el dominio de la función $g$ está definida como: $$Dom_{g} = \{x \in \mathbb{R} : -4\leq x \leq 3 \},$$ mientras que el rango de $g$ es: $$Im_{g} = \{y \in \mathbb{R} : -2 \leq y \leq 0.5\}.$$
+  \end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}
+  Determine si las curvas de la figura \ref{fig:ejercicio1p3} son una función de $x$. Si lo es, dé el dominio y el rango de la función.
+  \begin{figure}[h!]
+    \begin{center}
+      \begin{subfigure}{0.2\textwidth}
+          \centering
+          \includegraphics[width=\linewidth]{figures/ejercicio1p3pA.png}
+          \caption{Gráfica $f$.}
+          \label{fig:sub1}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}{0.2\textwidth}
+          \centering
+          \includegraphics[width=\linewidth]{figures/ejercicio1p3pB.png}
+          \caption{Gráfica $g$.}
+          \label{fig:sub2}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}{0.2\textwidth}
+          \centering
+          \includegraphics[width=\linewidth]{figures/ejercicio1p3pC.png}
+          \caption{Gráfica $h$.}
+          \label{fig:sub3}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}{0.2\textwidth}
+          \centering
+          \includegraphics[width=\linewidth]{figures/ejercicio1p3pD.png}
+          \caption{Gráfica $i$.}
+          \label{fig:sub4}
+      \end{subfigure}
+    \end{center}
+    \caption{Gráficas de las funciones $f$, $g$, $h$ e $i$.}\label{fig:ejercicio1p3}
+  \end{figure}
+\end{ejercicio}
+
+\textbf{Tarea: ejercicios 9 y 10 del libro \citep{stewart2001calculo}.}
+
+\begin{ejercicio}
+  Un globo esférico con radio $r$ pulgadas tiene el volumen $V(r) = \frac{4}{3} \pi r^{3}$. Encuentre una función que represente la cantidad de aire que se requiere para inflarlo desde un radio de $r$ pulgadas hasta otro de $r+1$ pulgadas.
+\end{ejercicio}
+
+\begin{ejercicio}
+  Encuentre $f(2+h), \, f(x+h), \, \text{ y } \, \frac{f(x+h)-f(x)}{h}$, donde $h\neq0$. 
+  \begin{enumerate}[label=(\alph*)]
+    \item $f(x) = x - x^{2}$
+    \item $f(x) = \displaystyle\frac{x}{x+1}$
+  \end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}
+  Encuentre el dominio de la función.
+  \begin{enumerate}[label=(\alph*)]
+    \item $f(x) = \displaystyle\frac{x+2}{x^{2} - 1}$
+    \item $f(x) = \displaystyle\frac{x^4}{x^2+x-6}$
+    \item $g(x) = \sqrt[4]{x^2 - 6x}$
+  \end{enumerate}
+\end{ejercicio}
+
+\textbf{Tarea: ejercicios 26 y 27 del libro \citep{stewart2001calculo}.}
+
+\begin{ejercicio}
+  Encuentre el dominio, la imagen y trace la gráfica de la función $h(x) = \sqrt{4 - x^2}$.
+\end{ejercicio}
+
+\begin{ejercicio}
+  Encuentre el dominio y trace la gráfica de la función.
+  \begin{enumerate}[label=(\alph*)]
+    \item $g(x) = \sqrt{x - 5}$
+    \item $g(x) = \sqrt{6 - 2x}$
+    \item $G(x) = |x| + x$
+    \item $f(x) = \displaystyle\frac{x}{|x|}$
+    \item $f(x) = \displaystyle\frac{x^2 + 5x + 6}{x + 2}$
+    \item $f(x) = 
+      \begin{cases}
+        -1, &\text{ si } x \leq -1\\
+        3x + 2, &\text{ si } |x| < 1\\
+        7 - 2x, &\text{ si } x \geq 1\\
+      \end{cases}$
+  \end{enumerate}
+\end{ejercicio}
+
+\textbf{Tarea: ejercicios 29, 30, 34, 37, 38, 39 y 41 - 46 del libro \citep{stewart2001calculo}.}
+
+\begin{ejercicio}
+  Encuentre una fórmula para la función descrita y dé su dominio. 
+  \begin{enumerate}[label=(\alph*)]
+    \item Un rectángulo tiene un perímetro de $20\,m$. Exprese el área del rectángulo como función de la longitud de uno de sus lados.
+    \item Un rectángulo tiene un área de $16\,m^2$. Exprese su perímetro como función de la longitud de uno de sus lados.
+    \item Exprese el área de un triángulo equilátero como función de la longitud de uno de los lados.
+    \item Exprese el área superficial de un cubo como función de su volumen.
+    \item Una caja rectangular abierta, con volumen de $2\,m^3$, tiene una base cuadrada. Exprese el área superficial de la caja como función de la longitud de uno de los lados de la base.
+  \end{enumerate}
+\end{ejercicio}
+\textbf{Tarea: ejercicios 52 - 54, 56, 57 del libro \citep{stewart2001calculo}.}
+
+\newpage
+\section{Modelos Matemáticos}
+
+\begin{ejercicio}
+  Clasifique cada una de las funciones como función potencia, función raíz, polinomio (indique el grado), función racional, función algebraica, función trigonométrica, función exponencial o función logarítmica.
+  \begin{multicols}{3}
+    \begin{enumerate}[label=(\alph*)]
+      \item $f(x) = \sqrt[5]{x}$
+      \item $g(x) = \sqrt{1-x^{2}}$
+      \item $h(x) = x^{9} + x^{4}$
+      \item $r(x) = \displaystyle\frac{x^{2} + 1}{x^{3} + x}$
+      \item $s(x) = \tan{2x}$
+      \item $t(x) = \log_{10}x$
+      \item $y = \displaystyle\frac{x - 6}{x + 6}$
+      \item $y = x + \displaystyle\frac{x^{2}}{\sqrt{x - 1}}$
+      \item $y = 10^{x}$
+      \item $y = x^{10}$
+      \item $y = 2t^{6} + t^{4} - \pi$
+      \item $y = \cos{\theta} + \sin{\theta}$
+    \end{enumerate}
+  \end{multicols}
+\end{ejercicio}
+
+\begin{ejercicio}
+  Haga coincidir cada ecuación con su gráfica. Explique su decisión en cada caso (no utilice calculadora ni graficadora).
+  \begin{multicols}{3}
+    \begin{enumerate}[label=(\alph*)]
+      \item $y = x^{2}$
+      \item $y = x^{5}$
+      \item $y = x^{8}$
+    \end{enumerate}
+  \end{multicols}
+  \begin{figure}[h!]
+      \begin{center}
+          \includegraphics[width=0.30\textwidth]{figures/ejercicio2p2pA.png}
+      \end{center}
+      \caption{Gráficas de las funciones correspondientes a los incisos $(a)$, $(b)$ y $(c)$.}\label{fig:ejercicio2p2pA}
+  \end{figure}
+  \begin{multicols}{2}
+    \begin{enumerate}[label=(\alph*), start=4]
+      \item $y = 3x$
+      \item $y = 3^{x}$
+      \item $y = x^{3}$
+      \item $y = \sqrt[3]{x}$
+    \end{enumerate}
+  \end{multicols}
+  \begin{figure}[h!]
+      \begin{center}
+          \includegraphics[width=0.30\textwidth]{figures/ejercicio2p2pB.png}
+      \end{center}
+      \caption{Gráficas de las funciones correspondientes a los incisos $(d)$, $(e)$, $(f)$ y $(g)$.}\label{fig:ejercicio2p2pB}
+  \end{figure}
+\end{ejercicio}
+
+\newpage
+\begin{ejercicio}
+  \begin{enumerate}[label=(\alph*)]
+    \item Encuentre una ecuación para la familia de funciones lineales con pendiente 2 y trace la gráfica de varios miembros de la familia.
+    \item Halle una ecuación para la familia de funciones lieneales tal que $f(2) = 1$ y dibuje varios miembros de la famlia.
+    \item ¿Qué función pertenece a ambas familias?
+  \end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}
+  El gerente de un bazar de fin de semana sabe con base en experiencias anteriores que si cobra $x$ pesos mexicanos por la renta de espacio en el bazar, entonces el número $y$ de espacios que puede rentar está dado por la ecuación $y = 200 - 4x$.
+  \begin{enumerate}[label=(\alph*)]
+    \item Trace la gráfica de esta función lineal (recuerde que la renta que se cobra por espacio y el número de espacios que pueden rentarse no pueden ser cantidades negativas).
+    \item ¿Qué representan la pendiente, la ordenada al origen y la abscisa al origen?
+  \end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}
+  La relación entre las escalas de temperatura Fahrenheit ($F$) y Celsius ($C$) está dada por la función lineal $F = \frac{9}{5} C + 32$.
+  \begin{enumerate}[label=(\alph*)]
+    \item Trace la gráfica de esta función.
+    \item ¿Cuál es la pendiente de la gráfica y qué representa? ¿Cuál es la intersección de $F$ y qué representa? 
+  \end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}
+  Los biólogos han notado que la cantidad de chirridos que emiten los grillos de cierta especie está relacionada con la temperatura y la correspondencia parece ser casi lineal. Un grillo produce 113 chirridos por minuto a $70 \, ^{\circ}F$ y 173 chirridos por minuto a $80 \, ^{\circ}F$.
+  \begin{enumerate}[label=(\alph*)]
+    \item Encuentre una ecuación lineal que modele la temperatura en celsius como una función del número de chirridos por minuto $N$.
+    \item ¿Cuál es la pendiente de la gráfica? ¿Qué representa? 
+    \item Si los grillos están chirriando a 150 chirridos por minuto, estime la temperatura.
+  \end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}
+  Determine, para cada una de las gráficas de dispersión, qué tipo de función elegiría como modelo para la información. Explique sus elecciones.
+  \begin{figure}[h!]
+    \begin{center}
+      \begin{subfigure}{0.2\textwidth}
+          \centering
+          \includegraphics[width=\linewidth]{figures/ejercicio2p7pA.png}
+          \caption{}
+          \label{fig:sub1}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}{0.2\textwidth}
+          \centering
+          \includegraphics[width=\linewidth]{figures/ejercicio2p7pB.png}
+          \caption{}
+          \label{fig:sub2}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}{0.2\textwidth}
+          \centering
+          \includegraphics[width=\linewidth]{figures/ejercicio2p7pC.png}
+          \caption{}
+          \label{fig:sub3}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}{0.2\textwidth}
+          \centering
+          \includegraphics[width=\linewidth]{figures/ejercicio2p7pD.png}
+          \caption{}
+          \label{fig:sub4}
+      \end{subfigure}
+    \end{center}
+    \caption{Gráficas de dispersión del ejercicio \ref{ejercicioDispersion}.}\label{fig:ejercicio2p7}
+  \end{figure}
+  \label{ejercicioDispersion}
+\end{ejercicio}
+
+\begin{ejercicio}
+  Los biólogos han observado que la cantidad de chirridos que emiten los grillos de cierta especie parece estar relacionada con la temperatura. La tabla \ref{tabla:tempChiPerMin} muestra la cantidad de chirridos para varias temperaturas.
+  
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{cc}
+        \toprule
+        \textbf{Temperatura ($^\circ$F)} & \textbf{Chirridos por minuto} \\
+        \midrule
+        50 & 20 \\
+        55 & 46 \\
+        60 & 79 \\
+        65 & 91 \\
+        70 & 113 \\
+        75 & 140 \\
+        80 & 173 \\
+        85 & 198 \\
+        90 & 211 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Temperatura y chirridos por minuto}
+    \label{tabla:tempChiPerMin}
+\end{table}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Convierte a grados celsius y realice una gráfica de dispersión de la información.
+  \item Encuentre y dibuje la línea de regresión.
+  \item Use el modelo lineal de la parte (b) para estimar la cantidad de chirridos a $100 ^{\circ}F$.
+\end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}
+  La tabla \ref{tabla:saltoGarrocha} proporciona las alturas ganadoras en las competencias de salto con garrocha de los Juegos Olímpicos durante el siglo XX.
+  
+\begin{table}[!hb]
+    \centering
+    \begin{tabular}{cccc}
+        \toprule
+        \textbf{Año} & \textbf{Altura (pies)} & \textbf{Año} & \textbf{Altura (pies)} \\
+        \midrule
+        1900 & 10.83 & 1956 & 14.96 \\
+        1904 & 11.48 & 1960 & 15.42 \\
+        1908 & 12.17 & 1964 & 16.73 \\
+        1912 & 12.96 & 1968 & 17.71 \\
+        1920 & 13.42 & 1972 & 18.04 \\
+        1924 & 12.96 & 1976 & 18.04 \\
+        1928 & 13.77 & 1980 & 18.96 \\
+        1932 & 14.15 & 1984 & 18.85 \\
+        1936 & 14.27 & 1988 & 19.77 \\
+        1948 & 14.10 & 1992 & 19.02 \\
+        1952 & 14.92 & 1996 & 19.42 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Altura a lo largo de los años}
+    \label{tabla:saltoGarrocha}
+\end{table}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Dibuje una gráfica de dispersión y determine si un modelo lineal es adecuado.
+  \item Encuentre y dibuje la línea de regresión.
+  \item Utilice el modelo lineal para predecir la altura del salto con garrocha ganador en los Juegos Olímpicos del año 2000 y compárelo con la altura ganadora real de 19.36 pies.
+  \item ¿Es razonable usar el modelo para predecir las alturas vencedoras en los Juegos Olímpicos del año 2100?
+\end{enumerate}
+\end{ejercicio}
+
+\bibliographystyle{abbrv}
+\bibliography{cite}
+
+\end{document}
