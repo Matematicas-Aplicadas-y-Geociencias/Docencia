@@ -1,0 +1,175 @@
+\documentclass[12pt,tikz,border=5pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[spanish]{babel}
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+\decimalpoint
+\usepackage{tikz}
+\usepackage{subcaption}
+\usetikzlibrary{babel} 
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{natbib}   
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amssymb} 
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\newtheorem{ejercicio}{Ejercicio}[section]
+
+\doublespacing
+
+\title{Cálculo Diferencial e Integral \\ Licenciatura en Ingeniería en Computación}
+\author{Dr. Julian Bravo \\ M. en C. Edwin Pérez}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Maneras de Representar una Función}
+Intenta resolver los ejercicios propuestos antes de la clase del 10 de septiembre. Lleva tus dudas para discutirlos en clase. Los ejercicios marcados como tarea se entregarán el 17 de septiembre en la plataforma classroom y escritos preferentemente en latex. \\
+
+Ejercicios tomados del libro de Cálculo de una Variable Trascendentes Tempranas 4ta Edición\citep{stewart2001calculo} (la sección del libro donde vienen los ejercicios para la tarea se puede encontrar en el classroom, dentro de la sección Tarea\,\#1, está nombrada como ``Ejercicios\_Representacion\_Funciones.pdf''.
+
+\begin{ejercicio}
+  Resuelve lo siguiente y exprese claramente su procedimiento.
+  \begin{enumerate}[label=(\alph*)]
+    \item Halle la pendiente de la línea tangente a la parábola $$y = 4x - x^2$$ en el punto $(1, 3)$
+      \begin{enumerate}
+        \item usando la definición de derivada con incrementos, $$\displaystyle f'(a) = \lim_{\Delta t \to 0} \frac{f(a+\Delta t)-f(a)}{\Delta t}$$
+        \item usando la forma equivalente, $$\displaystyle f'(a) = \lim_{x \to a} \frac{f(x)-f(a)}{x-a}$$
+      \end{enumerate}
+    \item 
+    \item 
+  \end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}
+  Se proporcionan las gráficas de $f$ y $g$ en la figura \ref{fig:ejercicio1p2}. \medskip
+
+  \begin{figure}[h!]
+      \begin{center}
+          \includegraphics[width=0.30\textwidth]{figures/ejercicio1p2.png}
+      \end{center}
+      \caption{Gráficas de las funciones $f$ y $g$.}\label{fig:ejercicio1p2}
+  \end{figure}
+
+  \begin{enumerate}[label=(\alph*)]
+    \item Dé los valores de $f(-4)$ y $g(3)$.
+      % El valor de $f(-4)=-2$ y de $g(3)=4$.
+    \item ¿Para cuáles valores de $x$ se tiene $f(x)=g(x)$?
+      % Según la figura \ref{fig:ejercicio1p2} los puntos de intersección entre las curvas de $f$ y $g$ son $(-2,1)$ y $(2,2)$, entonces los valores de $x$ cuando $f(x)=g(x)$ son $x=-2$ y $x=2$.
+    \item Estime la solución de la ecuación $f(x)=-1$.
+      % La solución a la ecuación $f(x)=-1$ se puede deducir de la figura \ref{fig:ejercicio1p2} y está dada por: $$\{x \in \mathbb{R} : f(x)=-1 \} = \{-3,4\}$$ es decir $$f(-3)=f(4)=-1.$$
+    \item ¿En qué intervalo $f$ es decreciente?
+      % Por medio de la figura \ref{fig:ejercicio1p2} se deduce que $f$ es decreciente en $[0,4]$. ¿Sobre qué intervalo $f$ es decreciente? ¿Cuáles son los intervalos donde $g$ es creciente y decreciente?
+    \item Establezca el dominio y el rango de $f$.
+      % De acuerdo a la figura \ref{fig:ejercicio1p2}, el dominio de la función $f$ está dada por: $$Dom_{f} = \{x \in \mathbb{R} : -4\leq x \leq 4 \}$$  y la imagen de $f$ es: $$Im_{f} = \{y \in \mathbb{R} : -2 \leq y \leq 3\}.$$
+    \item Establezca el dominio y el rango de $g$.
+      % Al observar la figura \ref{fig:ejercicio1p2}, el dominio de la función $g$ está definida como: $$Dom_{g} = \{x \in \mathbb{R} : -4\leq x \leq 3 \},$$ mientras que el rango de $g$ es: $$Im_{g} = \{y \in \mathbb{R} : -2 \leq y \leq 0.5\}.$$
+  \end{enumerate}
+\end{ejercicio}
+
+\begin{ejercicio}
+  Determine si las curvas de la figura \ref{fig:ejercicio1p3} son una función de $x$. Si lo es, dé el dominio y el rango de la función.
+  \begin{figure}[h!]
+    \begin{center}
+      \begin{subfigure}{0.2\textwidth}
+          \centering
+          \includegraphics[width=\linewidth]{figures/ejercicio1p3pA.png}
+          \caption{Gráfica $f$.}
+          \label{fig:sub1}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}{0.2\textwidth}
+          \centering
+          \includegraphics[width=\linewidth]{figures/ejercicio1p3pB.png}
+          \caption{Gráfica $g$.}
+          \label{fig:sub2}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}{0.2\textwidth}
+          \centering
+          \includegraphics[width=\linewidth]{figures/ejercicio1p3pC.png}
+          \caption{Gráfica $h$.}
+          \label{fig:sub3}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}{0.2\textwidth}
+          \centering
+          \includegraphics[width=\linewidth]{figures/ejercicio1p3pD.png}
+          \caption{Gráfica $i$.}
+          \label{fig:sub4}
+      \end{subfigure}
+    \end{center}
+    \caption{Gráficas de las funciones $f$, $g$, $h$ e $i$.}\label{fig:ejercicio1p3}
+  \end{figure}
+\end{ejercicio}
+
+\textbf{Tarea: ejercicios 9 y 10 del libro \citep{stewart2001calculo}.}
+
+\begin{ejercicio}
+  Un globo esférico con radio $r$ centímetros tiene el volumen $V(r) = \frac{4}{3} \pi r^{3}$. Encuentre una función que represente la cantidad de aire que se requiere para inflarlo desde un radio de $r$ centímetros hasta otro de $r+1$ centímetros.
+\end{ejercicio}
+
+\begin{ejercicio}
+  Encuentre $f(2+h), \, f(x+h), \, \text{ y } \, \frac{f(x+h)-f(x)}{h}$, donde $h\neq0$. 
+  \begin{enumerate}[label=(\alph*)]
+    \item $f(x) = x - x^{2}$
+    \item $f(x) = \displaystyle\frac{x}{x+1}$
+  \end{enumerate}
+\end{ejercicio}
+
+\newpage
+\begin{ejercicio}
+  Encuentre el dominio de la función.
+  \begin{enumerate}[label=(\alph*)]
+    \item $f(x) = \displaystyle\frac{x+2}{x^{2} - 1}$
+    \item $f(x) = \displaystyle\frac{x^4}{x^2+x-6}$
+    \item $g(x) = \sqrt[4]{x^2 - 6x}$
+  \end{enumerate}
+\end{ejercicio}
+
+\textbf{Tarea: ejercicios 26 y 27 del libro \citep{stewart2001calculo}.}
+
+\begin{ejercicio}
+  Encuentre el dominio, la imagen y trace la gráfica de la función $h(x) = \sqrt{4 - x^2}$.
+\end{ejercicio}
+
+\begin{ejercicio}
+  Encuentre el dominio y trace la gráfica de la función.
+  \begin{enumerate}[label=(\alph*)]
+    \item $g(x) = \sqrt{x - 5}$
+    \item $g(x) = \sqrt{6 - 2x}$
+    \item $G(x) = |x| + x$
+    \item $f(x) = \displaystyle\frac{x}{|x|}$
+    \item $f(x) = \displaystyle\frac{x^2 + 5x + 6}{x + 2}$
+    \item $f(x) = 
+      \begin{cases}
+        -1, &\text{ si } x \leq -1\\
+        3x + 2, &\text{ si } |x| < 1\\
+        7 - 2x, &\text{ si } x \geq 1\\
+      \end{cases}$
+  \end{enumerate}
+\end{ejercicio}
+
+\textbf{Tarea: ejercicios 29, 30, 34, 37, 38, 39 y 41 - 46 del libro \citep{stewart2001calculo}.}
+
+\begin{ejercicio}
+  Encuentre una fórmula para la función descrita y dé su dominio. 
+  \begin{enumerate}[label=(\alph*)]
+    \item Un rectángulo tiene un perímetro de $20\,m$. Exprese el área del rectángulo como función de la longitud de uno de sus lados.
+    \item Un rectángulo tiene un área de $16\,m^2$. Exprese su perímetro como función de la longitud de uno de sus lados.
+    \item Exprese el área de un triángulo equilátero como función de la longitud de uno de los lados.
+    \item Exprese el área superficial de un cubo como función de su volumen.
+    \item Una caja rectangular abierta, con volumen de $2\,m^3$, tiene una base cuadrada. Exprese el área superficial de la caja como función de la longitud de uno de los lados de la base.
+  \end{enumerate}
+\end{ejercicio}
+\textbf{Tarea: ejercicios 52 - 54, 56, 57 del libro \citep{stewart2001calculo}.}
+
+\bibliographystyle{abbrv}
+\bibliography{cite}
+
+\end{document}
