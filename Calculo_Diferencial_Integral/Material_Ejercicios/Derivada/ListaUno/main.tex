@@ -21,7 +21,7 @@
 \doublespacing
 
 \title{Cálculo Diferencial e Integral \\ Licenciatura en Ingeniería en Computación}
-\author{Dr. Julian Bravo \\ M. en C. Edwin Pérez}
+\author{M. en C. Edwin Pérez \\ Dr. Julian Bravo}
 \date{\today}
 
 \begin{document}
@@ -36,138 +36,102 @@ Ejercicios tomados del libro de Cálculo de una Variable Trascendentes Tempranas
 \begin{ejercicio}
   Resuelve lo siguiente y exprese claramente su procedimiento.
   \begin{enumerate}[label=(\alph*)]
-    \item Halle la pendiente de la línea tangente a la parábola $$y = 4x - x^2$$ en el punto $(1, 3)$
+    \item Halle la pendiente de la línea tangente a la parábola $y = 4x - x^2$ en el punto $(1, 3)$.
       \begin{enumerate}
         \item usando la definición de derivada con incrementos, $$\displaystyle f'(a) = \lim_{\Delta t \to 0} \frac{f(a+\Delta t)-f(a)}{\Delta t}$$
         \item usando la forma equivalente, $$\displaystyle f'(a) = \lim_{x \to a} \frac{f(x)-f(a)}{x-a}$$
       \end{enumerate}
-    \item 
-    \item 
+    \item Encuentre una ecuación de la recta tangente del inciso (a).
+    \item Dibuje la parábola y la tangente.
   \end{enumerate}
 \end{ejercicio}
 
 \begin{ejercicio}
-  Se proporcionan las gráficas de $f$ y $g$ en la figura \ref{fig:ejercicio1p2}. \medskip
-
-  \begin{figure}[h!]
-      \begin{center}
-          \includegraphics[width=0.30\textwidth]{figures/ejercicio1p2.png}
-      \end{center}
-      \caption{Gráficas de las funciones $f$ y $g$.}\label{fig:ejercicio1p2}
-  \end{figure}
-
+  Resuelve lo siguiente y exprese claramente su procedimiento.
   \begin{enumerate}[label=(\alph*)]
-    \item Dé los valores de $f(-4)$ y $g(3)$.
-      % El valor de $f(-4)=-2$ y de $g(3)=4$.
-    \item ¿Para cuáles valores de $x$ se tiene $f(x)=g(x)$?
-      % Según la figura \ref{fig:ejercicio1p2} los puntos de intersección entre las curvas de $f$ y $g$ son $(-2,1)$ y $(2,2)$, entonces los valores de $x$ cuando $f(x)=g(x)$ son $x=-2$ y $x=2$.
-    \item Estime la solución de la ecuación $f(x)=-1$.
-      % La solución a la ecuación $f(x)=-1$ se puede deducir de la figura \ref{fig:ejercicio1p2} y está dada por: $$\{x \in \mathbb{R} : f(x)=-1 \} = \{-3,4\}$$ es decir $$f(-3)=f(4)=-1.$$
-    \item ¿En qué intervalo $f$ es decreciente?
-      % Por medio de la figura \ref{fig:ejercicio1p2} se deduce que $f$ es decreciente en $[0,4]$. ¿Sobre qué intervalo $f$ es decreciente? ¿Cuáles son los intervalos donde $g$ es creciente y decreciente?
-    \item Establezca el dominio y el rango de $f$.
-      % De acuerdo a la figura \ref{fig:ejercicio1p2}, el dominio de la función $f$ está dada por: $$Dom_{f} = \{x \in \mathbb{R} : -4\leq x \leq 4 \}$$  y la imagen de $f$ es: $$Im_{f} = \{y \in \mathbb{R} : -2 \leq y \leq 3\}.$$
-    \item Establezca el dominio y el rango de $g$.
-      % Al observar la figura \ref{fig:ejercicio1p2}, el dominio de la función $g$ está definida como: $$Dom_{g} = \{x \in \mathbb{R} : -4\leq x \leq 3 \},$$ mientras que el rango de $g$ es: $$Im_{g} = \{y \in \mathbb{R} : -2 \leq y \leq 0.5\}.$$
+    \item Encuentre la pendiente de la tangente a la curva $y = x - x^3$ en el punto $(1, 0)$.
+      \begin{enumerate}
+        \item usando la definición de derivada con incrementos, $$\displaystyle f'(a) = \lim_{\Delta t \to 0} \frac{f(a+\Delta t)-f(a)}{\Delta t}$$
+        \item usando la forma equivalente, $$\displaystyle f'(a) = \lim_{x \to a} \frac{f(x)-f(a)}{x-a}$$
+      \end{enumerate}
+    \item Halle una ecuación de la recta tangente del inciso (a).
+    \item Dibuje la curva y la tangente.
   \end{enumerate}
 \end{ejercicio}
 
 \begin{ejercicio}
-  Determine si las curvas de la figura \ref{fig:ejercicio1p3} son una función de $x$. Si lo es, dé el dominio y el rango de la función.
-  \begin{figure}[h!]
-    \begin{center}
-      \begin{subfigure}{0.2\textwidth}
-          \centering
-          \includegraphics[width=\linewidth]{figures/ejercicio1p3pA.png}
-          \caption{Gráfica $f$.}
-          \label{fig:sub1}
-      \end{subfigure}
-      \hfill
-      \begin{subfigure}{0.2\textwidth}
-          \centering
-          \includegraphics[width=\linewidth]{figures/ejercicio1p3pB.png}
-          \caption{Gráfica $g$.}
-          \label{fig:sub2}
-      \end{subfigure}
-      \hfill
-      \begin{subfigure}{0.2\textwidth}
-          \centering
-          \includegraphics[width=\linewidth]{figures/ejercicio1p3pC.png}
-          \caption{Gráfica $h$.}
-          \label{fig:sub3}
-      \end{subfigure}
-      \hfill
-      \begin{subfigure}{0.2\textwidth}
-          \centering
-          \includegraphics[width=\linewidth]{figures/ejercicio1p3pD.png}
-          \caption{Gráfica $i$.}
-          \label{fig:sub4}
-      \end{subfigure}
-    \end{center}
-    \caption{Gráficas de las funciones $f$, $g$, $h$ e $i$.}\label{fig:ejercicio1p3}
-  \end{figure}
-\end{ejercicio}
-
-\textbf{Tarea: ejercicios 9 y 10 del libro \citep{stewart2001calculo}.}
-
-\begin{ejercicio}
-  Un globo esférico con radio $r$ centímetros tiene el volumen $V(r) = \frac{4}{3} \pi r^{3}$. Encuentre una función que represente la cantidad de aire que se requiere para inflarlo desde un radio de $r$ centímetros hasta otro de $r+1$ centímetros.
-\end{ejercicio}
-
-\begin{ejercicio}
-  Encuentre $f(2+h), \, f(x+h), \, \text{ y } \, \frac{f(x+h)-f(x)}{h}$, donde $h\neq0$. 
+  En los problemas siguientes, damos la función de posición $x = f(t)$ de una partícula en movimiento en una recta horizonta. Determine su posición $x$ cuando su velocidad $v$ es cero.
   \begin{enumerate}[label=(\alph*)]
-    \item $f(x) = x - x^{2}$
-    \item $f(x) = \displaystyle\frac{x}{x+1}$
+    \item $x = 100 - 16t^2$
+    \item $x = -16t^2 + 80t - 1$
+    \item $100- 20t - 5t^2$
   \end{enumerate}
 \end{ejercicio}
 
-\newpage
 \begin{ejercicio}
-  Encuentre el dominio de la función.
+  En los problemas siguientes, damos la altura $y(t)$ (en metros en el instante $t$ segundos) de una pelota lanzada verticalmente hacia arriba. Determine la altura máxima que alcanza la pelota.
   \begin{enumerate}[label=(\alph*)]
-    \item $f(x) = \displaystyle\frac{x+2}{x^{2} - 1}$
-    \item $f(x) = \displaystyle\frac{x^4}{x^2+x-6}$
-    \item $g(x) = \sqrt[4]{x^2 - 6x}$
+    \item $y = -16t^2 + 160t$
+    \item $y = -16t^2 + 128t + 25$
+    \item $y = -16t^2 + 96t + 50$
   \end{enumerate}
 \end{ejercicio}
 
-\textbf{Tarea: ejercicios 26 y 27 del libro \citep{stewart2001calculo}.}
-
 \begin{ejercicio}
-  Encuentre el dominio, la imagen y trace la gráfica de la función $h(x) = \sqrt{4 - x^2}$.
+  La temperatura Celsius $C$ está dada en términos de la temperatura Fahrenheit $F$ por $C = \dfrac{5}{9}(F - 32)$. Determine la razón de cambio de $C$ con respecto de $F$ y la razón de cambio de $F$ con respecto de $C$.
 \end{ejercicio}
 
 \begin{ejercicio}
-  Encuentre el dominio y trace la gráfica de la función.
+  Determine la razón de cambio del área de $A$ de un círculo con respecto de su circunferencia $C$.
+\end{ejercicio}
+
+\begin{ejercicio}
+  Determine la razón de cambio del área de $A$ de un círculo con respecto de su circunferencia $C$.
+\end{ejercicio}
+
+\begin{ejercicio}
+  Un globo esférico con un radio inicial $r = 5$ cm comineza a deinflarse en el instante $t=0$ y su radio $t$ segundos más tarde es $r =  \dfrac{60 - t}{12}$ cm. ¿A qué razón (en $cm^3/s$) sale el aire del globo cuando $t = 30$?
+\end{ejercicio}
+
+\begin{ejercicio}
+  El volumen $V$ (en litros) de 3 gramos de $CO_2$ a 27$^oC$ está dado en términos de su presion $p$ (en atmósferas) por la fórmula $V(p) = \dfrac{1.68}{p}$. ¿Cuál es la razón de cambio de $V$ con respecto de $p$ cuando $p = 2$ (atmósferas)?
+\end{ejercicio}
+
+\begin{ejercicio}
+  Al derretirse una bola de nieve con radio inicial de 12 cm, su radio decrece a una razón constante. Comienza a derretirse cuando $t = 0$ h (horas) y tarda 12 horas en desaparecer.
   \begin{enumerate}[label=(\alph*)]
-    \item $g(x) = \sqrt{x - 5}$
-    \item $g(x) = \sqrt{6 - 2x}$
-    \item $G(x) = |x| + x$
-    \item $f(x) = \displaystyle\frac{x}{|x|}$
-    \item $f(x) = \displaystyle\frac{x^2 + 5x + 6}{x + 2}$
-    \item $f(x) = 
-      \begin{cases}
-        -1, &\text{ si } x \leq -1\\
-        3x + 2, &\text{ si } |x| < 1\\
-        7 - 2x, &\text{ si } x \geq 1\\
-      \end{cases}$
+    \item ¿Cuál es la razón de cambio del volumen cuando $t = 6$
+    \item ¿Cuál es la razón de cambio promedio del volumen de $t = 3$ a $t = 9$.
   \end{enumerate}
 \end{ejercicio}
-
-\textbf{Tarea: ejercicios 29, 30, 34, 37, 38, 39 y 41 - 46 del libro \citep{stewart2001calculo}.}
 
 \begin{ejercicio}
-  Encuentre una fórmula para la función descrita y dé su dominio. 
-  \begin{enumerate}[label=(\alph*)]
-    \item Un rectángulo tiene un perímetro de $20\,m$. Exprese el área del rectángulo como función de la longitud de uno de sus lados.
-    \item Un rectángulo tiene un área de $16\,m^2$. Exprese su perímetro como función de la longitud de uno de sus lados.
-    \item Exprese el área de un triángulo equilátero como función de la longitud de uno de los lados.
-    \item Exprese el área superficial de un cubo como función de su volumen.
-    \item Una caja rectangular abierta, con volumen de $2\,m^3$, tiene una base cuadrada. Exprese el área superficial de la caja como función de la longitud de uno de los lados de la base.
-  \end{enumerate}
+  En los siguientes ejercicios, encuentre la pendiente de la recta tangeten a la gráfica de la función en el punto dado.
+  \begin{multicols}{3}
+    \begin{enumerate}[label=(\alph*)]
+      \item $f(x) = 3 - 5x$, $(-1, 8)$
+      \item $g(x) = x^2 - 9$, $(2, -5)$
+      \item $f(t) = 3t - t^2$, $(0, 0)$
+      \item $g(x) = \dfrac{3}{2}x + 1$, $(-2, -2)$
+      \item $f(x) = 5 - x^2$, $(3, -4)$
+      \item $h(t) = t^2 + 4t$, $(1, 5)$
+    \end{enumerate}
+  \end{multicols}
 \end{ejercicio}
-\textbf{Tarea: ejercicios 52 - 54, 56, 57 del libro \citep{stewart2001calculo}.}
+
+\begin{ejercicio}
+  En los siguientes ejercicios, encuentre la pendiente de la recta tangeten a la gráfica de la función en el punto dado.
+  \begin{multicols}{3}
+    \begin{enumerate}[label=(\alph*)]
+      \item $f(x) = 3 - 5x$, $(-1, 8)$
+      \item $g(x) = x^2 - 9$, $(2, -5)$
+      \item $f(t) = 3t - t^2$, $(0, 0)$
+      \item $g(x) = \dfrac{3}{2}x + 1$, $(-2, -2)$
+      \item $f(x) = 5 - x^2$, $(3, -4)$
+      \item $h(t) = t^2 + 4t$, $(1, 5)$
+    \end{enumerate}
+  \end{multicols}
+\end{ejercicio}
 
 \bibliographystyle{abbrv}
 \bibliography{cite}
