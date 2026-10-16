@@ -420,7 +420,7 @@ def _(mo):
     $$\lim_{\Delta t \to 0} \frac{f(a + \Delta t)-f(a)}{\Delta t}$$
     aparecen cuando se calcula una razón de cambio en cualquiera de las ciencias o en la ingeniería — particularmente en Ingeniería de la Computación, la velocidad de descarga de datos en una aplicación, como la que acabamos de estudiar, o también el costo marginal de cómputo al escalar un sistema, o la latencia de un servidor conforme aumenta el número de usuarios conectados. Ya que esta clase de límite sucede, muy seguido, se le da un nombre y notación especial.
 
-    **Definición** La **derivada de una función $f$ en un número $a$**, se indica mediante f'(a), es:
+    **Definición.** La **derivada de una función $f$ en un número $a$**, se indica mediante f'(a), es:
 
     $$f'(a) = \lim_{\Delta t \to 0} \frac{f(a + \Delta t)-f(a)}{\Delta t}$$
 
@@ -481,19 +481,21 @@ def _(mo):
 
     1. Una empresa de servicios en la nube cobra a sus clientes por el uso de almacenamiento. El costo de almacenar $x$ gigabytes (GB) de datos en un mes es $C(x)$ pesos.
 
-    (a) ¿Cuál es el significado de la derivada $C'(x)$? ¿Cuáles son sus unidades?
+        (a) ¿Cuál es el significado de la derivada $C'(x)$? ¿Cuáles son sus unidades?
 
-    (b) En términos prácticos, ¿qué significa decir que $C'(1000) = 22$?
+        (b) En términos prácticos, ¿qué significa decir que $C'(1000) = 22$?
 
-    (c) ¿Qué le hace pensar que es más grande, $C'(50)$ o $C'(500)$? ¿Qué hay respecto a $C'(5000)$?
+        (c) ¿Qué le hace pensar que es más grande, $C'(50)$ o $C'(500)$? ¿Qué hay respecto a $C'(5000)$?
 
     2. Una curva tiene la ecuación $y=f(x)$.
-    (a) Escriba una expresión para la pendiente de la recta secante
+
+        (a) Escriba una expresión para la pendiente de la recta secante
     que pasa por los puntos $P(3,f(3))$ y $Q(x,f(x))$.
-    (b) Escriba una expresión para la pendiente de la recta
+
+        (b) Escriba una expresión para la pendiente de la recta
     tangente en $P$.
 
-    3. Si una pelota se lanza al aire hacia arriba, con una velocidad de 40 m/s, su altura (en m) una vez que transcurren $t$ segundos, está dada por $y = 40t - 16t^2$. Encuentre la velocidad después de $t=2$ segundos.
+    4. Si una pelota se lanza al aire hacia arriba, con una velocidad de 40 m/s, su altura (en m) una vez que transcurren $t$ segundos, está dada por $y = 40t - 16t^2$. Encuentre la velocidad después de $t=2$ segundos.
     """)
     return
 
