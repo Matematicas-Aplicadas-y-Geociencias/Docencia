@@ -1,0 +1,16 @@
+\frametitle{Flujo de trabajo completo}
+\begin{lstlisting}[language=bash]
+git clone https://github.com/usuario/proyecto.git
+cd proyecto
+
+"Si se trabaja en otra rama que no se la main"
+git checkout -b mi-funcionalidad
+
+git add .
+git commit -m "Agregar nueva funcionalidad"
+
+git push -u origin mi-funcionalidad
+
+"Bajar cambios hechos por otros usuarios"
+git pull origin main
+\end{lstlisting}

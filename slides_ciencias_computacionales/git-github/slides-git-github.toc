@@ -1,0 +1,7 @@
+\beamer@sectionintoc {1}{¿Qué es Git?}{3}{0}{1}
+\beamer@sectionintoc {2}{¿Qué es GitHub?}{6}{0}{2}
+\beamer@sectionintoc {3}{Instalación de Git}{8}{0}{3}
+\beamer@sectionintoc {4}{Configuración de Git}{10}{0}{4}
+\beamer@sectionintoc {5}{Comandos principales de Git}{12}{0}{5}
+\beamer@sectionintoc {6}{Descargar repositorios de GitHub}{18}{0}{6}
+\beamer@sectionintoc {7}{Recursos adicionales}{21}{0}{7}
