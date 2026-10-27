@@ -1,0 +1,361 @@
+\documentclass[12pt,tikz,border=5pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+\decimalpoint
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{tikz}
+\usepackage{subcaption}
+\usetikzlibrary{babel} 
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{natbib}   
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+\newtheorem{ejercicio}{Ejercicio}[section]
+
+\title{Cálculo Diferencial e Integral \\ \large Licenciatura en Ingeniería en Computación}
+\author{M. en C. Edwin Pérez \\ Dr. Julian Bravo}
+\date{20 de octubre de 2026}
+
+\begin{document}
+\maketitle
+
+\section{Derivabilidad y continuidad}
+
+\noindent \textbf{¿Existe alguna relación entre derivabilidad y continuidad?}
+
+Recordemos que una manera de expresar la derivada de $f$ en un punto $a$ es
+
+$$f'(a) = \lim_{x\to a} \frac{f(x)-f(a)}{x-a}$$
+
+\textsc{siempre que dicho límite exista.}
+
+La existencia de dicho límite requiere conocer las siguientes definiciones:
+
+\subsection*{Definición: Derivada Lateral}
+
+\begin{enumerate}[label=\alph*)]
+\item Si la función $f$ está definida en un punto $a$, entonces la
+\textbf{derivada por la derecha} de $f$ en $a$, denotada por $f'_+(a)$, está
+definida por
+$$f'_+(a) = \lim_{x\to a^+} \frac{f(x)-f(a)}{x-a}$$
+
+\item Si la función $f$ está definida en un punto $a$, entonces la
+\textbf{derivada por la izquierda} de $f$ en $a$, denotada por $f'_-(a)$,
+está definida por
+$$f'_-(a) = \lim_{x\to a^-} \frac{f(x)-f(a)}{x-a}$$
+\end{enumerate}
+
+Entonces, podemos concluir lo siguiente:
+
+\begin{quote}
+El $\displaystyle\lim_{x\to a}\frac{f(x)-f(a)}{x-a} = f'(a)$ existe si y
+sólo si $f'_+(a)$, $f'_-(a)$ existen y $f'_+(a) = f'_-(a)$.
+\end{quote}
+
+Conocer lo anterior, nos permite definir lo siguiente:
+
+\subsection*{Definición}
+
+Una función $f$ es \textbf{derivable en $a$} si $f'(a)$ existe. Es
+\textbf{derivable en un intervalo abierto $(a,b)$}\footnote{También puede
+ser $(a,\infty)$, $(-\infty,a)$ o $(-\infty,\infty)$.} si es derivable
+$\forall\, c\in(a,b)$.
+
+\section{Ejemplos ilustrativos}
+
+\begin{ejercicio}
+¿Dónde es derivable la función $f(x) = \dfrac{3}{x}$?
+
+Primero calculemos la derivada de $f$:
+
+\begin{align*}
+f'(x) &= \lim_{\Delta x\to 0}\frac{f(x+\Delta x)-f(x)}{\Delta x} = \lim_{\Delta x\to 0}\frac{\dfrac{3}{x+\Delta x}-\dfrac{3}{x}}{\Delta x} \\[4pt]
+&= \lim_{\Delta x\to 0}\frac{\dfrac{3x-3(x+\Delta x)}{x(x+\Delta x)}}{\Delta x} = \lim_{\Delta x\to 0}\frac{3x-3x-3\Delta x}{x^2\Delta x+x\Delta x^2} \\[4pt]
+&= \lim_{\Delta x\to 0}\frac{-3\Delta x}{\Delta x(x^2+x\Delta x)} = \lim_{\Delta x\to 0}\frac{-3}{x^2+x\Delta x} = -\frac{3}{x^2}
+\end{align*}
+
+Notemos que $\operatorname{Dom} f' = (-\infty,0)\cup(0,\infty)$, por lo que
+$f$ es derivable $\forall x\in(-\infty,0)\cup(0,\infty)$.
+
+Además observemos que $\operatorname{Dom} f = \operatorname{Dom} f'$.
+\end{ejercicio}
+
+\begin{ejercicio}
+¿La función $g(x) = \sqrt{x}$ es derivable en $x=0$?
+
+Para valores de $x<0$, $g$ no está definida; por lo tanto, el cociente $\frac{g(0+\Delta x)-g(0)}{\Delta x}$ no tiene sentido cuando $\Delta x<0$, y $g'_-(0)$ no existe.
+Ahora veamos qué sucede con la derivada lateral derecha de $g$ en 0:
+
+\begin{align*}
+g'_+(0) &= \lim_{\Delta x\to 0^+}\frac{f(0+\Delta x)-f(0)}{\Delta x} = \lim_{\Delta x\to 0^+}\frac{\sqrt{\Delta x}-\sqrt{0}}{\Delta x} \\[4pt]
+&= \lim_{\Delta x\to 0^+}\frac{\sqrt{\Delta x}}{\Delta x} = \lim_{\Delta x\to 0^+}\frac{1}{\sqrt{\Delta x}} \qquad \text{¡No existe!}
+\end{align*}
+
+Así que $g'_{+}(0)$ no existe. \textbf{Conclusión}: $g$ no es derivable en $x=0$. \bigskip
+
+¿En qué intervalo la función $g$ es derivable? Primero calculemos la derivada de $g$:
+
+\begin{align*}
+g'(x) &= \lim_{\Delta x\to 0}\frac{f(x+\Delta x)-f(x)}{\Delta x} = \lim_{\Delta x\to 0}\frac{\sqrt{x+\Delta x}-\sqrt{x}}{\Delta x} \\[4pt]
+&= \lim_{\Delta x\to 0}\frac{\sqrt{x+\Delta x}-\sqrt{x}}{\Delta x}\cdot\left(\frac{\sqrt{x+\Delta x}+\sqrt{x}}{\sqrt{x+\Delta x}+\sqrt{x}}\right) \\[4pt]
+&= \lim_{\Delta x\to 0}\frac{(x+\Delta x)-x}{\Delta x\sqrt{x+\Delta x}+\Delta x\sqrt{x}} = \lim_{\Delta x\to 0}\frac{\Delta x}{\Delta x\sqrt{x+\Delta x}+\Delta x\sqrt{x}} \\[4pt]
+&= \lim_{\Delta x\to 0}\frac{1}{\sqrt{x+\Delta x}+\sqrt{x}} = \frac{1}{2\sqrt{x}}
+\end{align*}
+
+ De modo que el $\operatorname{Dom} g' = (0,\infty)$. Por lo que $g$ es derivable $\forall x\in(0,\infty)$. Sabemos que el $\operatorname{Dom} g = [0,\infty)$. Luego, $\operatorname{Dom} g' \subset \operatorname{Dom} g$.
+
+\end{ejercicio}
+
+\subsection*{iii) $h(x) = |x|$}
+
+Recordemos que la función $h$ se puede reescribir como
+
+$$h(x) = \begin{cases} x & \text{si } x\ge 0 \\ -x & \text{si } x<0 \end{cases}$$
+
+Por un lado, considere los valores de $x>0$. Si se considera un $\Delta x$
+lo suficientemente pequeño para que $x+\Delta x>0$, entonces
+$|x+\Delta x| = x+\Delta x$. Así que
+
+$$h'(x) = \lim_{\Delta x\to 0}\frac{h(x+\Delta x)-h(x)}{\Delta x} = \lim_{\Delta x\to 0}\frac{|x+\Delta x|-|x|}{\Delta x} = \lim_{\Delta x\to 0}\frac{x+\Delta x-x}{\Delta x} = \lim_{\Delta x\to 0}\frac{\Delta x}{\Delta x} = 1$$
+
+Por lo tanto, $h$ es derivable $\forall x\in(0,\infty)$.
+
+Por otro lado, considere aquellos valores para los cuales $x<0$. Elijamos
+$\Delta x$ lo suficientemente pequeño para que $x+\Delta x<0$, entonces
+$|x+\Delta x| = -(x+\Delta x)$. Entonces,
+
+$$h'(x) = \lim_{\Delta x\to 0}\frac{|x+\Delta x|-|x|}{\Delta x} = \lim_{\Delta x\to 0}\frac{-(x+\Delta x)+x}{\Delta x} = -\lim_{\Delta x\to 0}\frac{\Delta x}{\Delta x} = -1$$
+
+Por lo tanto, $h$ es derivable $\forall x\in(-\infty,0)$.
+
+Por último, considere el caso cuando $x=0$. Observemos que
+
+$$h'(0) = \lim_{\Delta x\to 0}\frac{h(0+\Delta x)-h(0)}{\Delta x} = \lim_{\Delta x\to 0}\frac{|\Delta x|}{\Delta x} \qquad \text{¿Existirá?}$$
+
+Utilicemos la derivada lateral para descubrir si el límite anterior existe:
+por un lado,
+
+$$h'_+(0) = \lim_{\Delta x\to 0^+}\frac{|\Delta x|}{\Delta x} = \lim_{\Delta x\to 0^+} 1 = 1$$
+
+por otro lado,
+
+$$h'_-(0) = \lim_{\Delta x\to 0^-}\frac{|\Delta x|}{\Delta x} = \lim_{\Delta x\to 0^-}(-1) = -1$$
+
+Debido a que $h'_-(0) \ne h'_+(0)$, $h$ no es derivable en $0$.
+
+\textbf{En conclusión}, $h$ es derivable $\forall x\in(-\infty,0)\cup(0,\infty)$.
+
+\subsection*{iv) $f(x) = \sqrt[3]{x}$}
+
+\noindent\textbf{¿Por qué $f$ no es derivable en $x=0$?} Observemos que
+
+$$f'(0) = \lim_{\Delta x\to 0}\frac{f(0+\Delta x)-f(0)}{\Delta x} = \lim_{\Delta x\to 0}\frac{\Delta x^{1/3}}{\Delta x} = \lim_{\Delta x\to 0}\frac{1}{\Delta x^{2/3}} \qquad \text{¡No existe!}$$
+
+Por lo tanto, $f$ no es derivable en $0$.
+
+\bigskip
+
+Tanto la continuidad como la derivabilidad son propiedades deseables para
+una función, y el siguiente teorema muestra cómo se relacionan ambas.
+
+\section{Relación entre derivabilidad y continuidad}
+
+\textbf{Teorema.} Si $f$ es derivable en $a$, entonces $f$ es continua en
+$a$.
+
+\textbf{Demostración.}
+
+Recordemos que una función $f$ es continua en $a$ si y sólo si cumple con
+lo siguiente:
+
+\begin{enumerate}[label=\roman*)]
+\item $f(a)$ existe
+\item $\displaystyle\lim_{x\to a} f(x)$ existe
+\item $\displaystyle\lim_{x\to a} f(x) = f(a)$
+\end{enumerate}
+
+Como $f$ es derivable en $a$, esto quiere decir que
+
+$$f'(a) = \lim_{x\to a}\frac{f(x)-f(a)}{x-a} \quad \text{existe}$$
+
+por lo que $f(a)$ existe y se cumple con el i) de las condiciones de
+continuidad.
+
+Para demostrar que $\displaystyle\lim_{x\to a} f(x)$ existe y
+$\displaystyle\lim_{x\to a} f(x) = f(a)$, basta con demostrar que
+
+$$\lim_{x\to a}\big[f(x)-f(a)\big] = 0 \qquad \text{¿Por qué?}$$
+
+ya que $\displaystyle\lim_{x\to a} f(x) = f(a)$ si y sólo si
+$\displaystyle\lim_{x\to a}\big[f(x)-f(a)\big] = 0$. Entonces
+
+\begin{align*}
+\lim_{x\to a}\big[f(x)-f(a)\big] &= \lim_{x\to a}\big[\big(f(x)-f(a)\big)\cdot 1\big] = \lim_{x\to a}\left[\frac{f(x)-f(a)}{x-a}\cdot(x-a)\right] \\[4pt]
+&= \lim_{x\to a}\frac{f(x)-f(a)}{x-a}\cdot \lim_{x\to a}(x-a) \\[4pt]
+&= f'(a)\cdot 0 = 0 \qquad \blacksquare
+\end{align*}
+
+\section{Reglas de Derivación}
+
+
+\subsection{Regla de la suma (y de la resta)}
+
+\textbf{Teorema.} Si $f$ y $g$ son derivables en $x$, entonces
+
+$$(f+g)'(x) = f'(x) + g'(x) \qquad \text{y} \qquad (f-g)'(x) = f'(x) - g'(x)$$
+
+\textbf{Demostración.}
+
+Por definición de derivada, aplicada a la función $f+g$:
+
+\begin{align*}
+(f+g)'(x) &= \lim_{\Delta x\to 0} \frac{(f+g)(x+\Delta x)-(f+g)(x)}{\Delta x} \\[4pt]
+&= \lim_{\Delta x\to 0} \frac{\big[f(x+\Delta x)+g(x+\Delta x)\big]-\big[f(x)+g(x)\big]}{\Delta x}
+\end{align*}
+
+Reagrupamos los términos de $f$ y de $g$ por separado:
+
+$$(f+g)'(x) = \lim_{\Delta x\to 0}\left[\frac{f(x+\Delta x)-f(x)}{\Delta x} + \frac{g(x+\Delta x)-g(x)}{\Delta x}\right]$$
+
+Como $f$ y $g$ son derivables, ambos límites existen por separado, así que
+podemos separar el límite de la suma en la suma de los límites:
+
+$$(f+g)'(x) = \lim_{\Delta x\to 0}\frac{f(x+\Delta x)-f(x)}{\Delta x} + \lim_{\Delta x\to 0}\frac{g(x+\Delta x)-g(x)}{\Delta x} = f'(x)+g'(x) \qquad \blacksquare$$
+
+La demostración de la resta es idéntica, cambiando cada signo $+$ por un
+signo $-$.
+
+\subsection{Regla del producto}
+
+\textbf{Teorema.} Si $f$ y $g$ son derivables en $x$, entonces
+
+$$(fg)'(x) = f'(x)\,g(x) + f(x)\,g'(x)$$
+
+\textbf{Demostración.}
+
+Por definición:
+
+$$(fg)'(x) = \lim_{\Delta x\to 0}\frac{f(x+\Delta x)g(x+\Delta x) - f(x)g(x)}{\Delta x}$$
+
+Notemos que no podemos separar directamente este límite como hicimos con la
+suma. El truco aquí es \textbf{sumar y restar} el mismo término,
+$f(x+\Delta x)\,g(x)$, en el numerador — esto no cambia el valor de la
+expresión, pero nos permite factorizar:
+
+\begin{align*}
+(fg)'(x) &= \lim_{\Delta x\to 0}\frac{f(x+\Delta x)g(x+\Delta x) - f(x+\Delta x)g(x) + f(x+\Delta x)g(x) - f(x)g(x)}{\Delta x} \\[4pt]
+&= \lim_{\Delta x\to 0}\left[f(x+\Delta x)\cdot\frac{g(x+\Delta x)-g(x)}{\Delta x} + g(x)\cdot\frac{f(x+\Delta x)-f(x)}{\Delta x}\right]
+\end{align*}
+
+Como $f$ es derivable, por el teorema de la sección anterior sabemos que
+$f$ también es continua, así que $f(x+\Delta x)\to f(x)$ cuando
+$\Delta x\to 0$. Tomando el límite de cada factor por separado:
+
+$$(fg)'(x) = f(x)\,g'(x) + g(x)\,f'(x) \qquad \blacksquare$$
+
+\subsection{Regla del cociente}
+
+\textbf{Teorema.} Si $u$ y $v$ son derivables en $x$, con $v(x)\ne 0$,
+entonces
+
+$$\left(\frac{u}{v}\right)'(x) = \frac{u'(x)\,v(x) - u(x)\,v'(x)}{\big(v(x)\big)^2}$$
+
+\textbf{Demostración.}
+
+Por definición:
+
+$$\left(\frac{u}{v}\right)'(x) = \lim_{\Delta x\to 0}\frac{1}{\Delta x}\left[\frac{u(x+\Delta x)}{v(x+\Delta x)} - \frac{u(x)}{v(x)}\right]$$
+
+Juntamos las dos fracciones de en medio con un común denominador:
+
+$$= \lim_{\Delta x\to 0}\frac{u(x+\Delta x)v(x) - u(x)v(x+\Delta x)}{\Delta x\,v(x+\Delta x)v(x)}$$
+
+Igual que con el producto, sumamos y restamos un término conveniente en el
+numerador, esta vez $u(x)v(x)$:
+
+$$= \lim_{\Delta x\to 0}\frac{\big[u(x+\Delta x)-u(x)\big]v(x) - u(x)\big[v(x+\Delta x)-v(x)\big]}{\Delta x\,v(x+\Delta x)v(x)}$$
+
+Separamos en dos fracciones y dividimos cada numerador entre $\Delta x$:
+
+$$= \lim_{\Delta x\to 0}\frac{\dfrac{u(x+\Delta x)-u(x)}{\Delta x}\,v(x) - u(x)\,\dfrac{v(x+\Delta x)-v(x)}{\Delta x}}{v(x+\Delta x)\,v(x)}$$
+
+Como $v$ es derivable, también es continua, así que $v(x+\Delta x)\to v(x)$
+cuando $\Delta x\to 0$. Tomando el límite de cada parte:
+
+$$\left(\frac{u}{v}\right)'(x) = \frac{u'(x)v(x) - u(x)v'(x)}{\big(v(x)\big)^2} \qquad \blacksquare$$
+
+\subsection{Regla de la cadena}
+
+\textbf{Teorema.} Sea $y=f(u)$ y $u=g(x)$, con $g$ derivable en $x$ y $f$
+derivable en $g(x)$. Entonces
+
+$$\frac{dy}{dx} = \frac{dy}{du}\cdot\frac{du}{dx}$$
+
+\textbf{Demostración (heurística).}
+
+Sea $u=g(x)$, y sea $\Delta u = g(x+\Delta x)-g(x)$ el cambio
+correspondiente en $u$ cuando $x$ cambia en $\Delta x$. Si $\Delta u\ne 0$,
+podemos multiplicar y dividir por $\Delta u$ dentro del cociente de
+diferencias de $y=f(u)=f(g(x))$:
+
+$$\frac{\Delta y}{\Delta x} = \frac{\Delta y}{\Delta u}\cdot\frac{\Delta u}{\Delta x}$$
+
+Cuando $\Delta x\to 0$, también $\Delta u\to 0$ (porque $g$ es derivable, y
+por lo tanto continua). Entonces, usando la propiedad del límite de un
+producto:
+
+$$\frac{dy}{dx} = \lim_{\Delta x\to 0}\frac{\Delta y}{\Delta x} = \left(\lim_{\Delta u\to 0}\frac{\Delta y}{\Delta u}\right)\cdot\left(\lim_{\Delta x\to 0}\frac{\Delta u}{\Delta x}\right) = \frac{dy}{du}\cdot\frac{du}{dx} \qquad \blacksquare$$
+
+\textbf{Advertencia técnica.} Este argumento tiene un hueco: $\Delta u$
+podría valer $0$ para algunos $\Delta x\ne 0$ arbitrariamente pequeños (por
+ejemplo, si $g$ es constante en ciertos tramos), y entonces no se podría
+dividir entre $\Delta u$. La demostración rigurosa, que evita este
+problema, requiere definir con más cuidado el cociente usando una función
+auxiliar continua en $0$; queda fuera del alcance de este curso. El
+resultado, sin embargo, sí es válido en general.
+
+\subsection{Composición de funciones}
+
+\textbf{Definición.} Dadas dos funciones $f$ y $g$, su \textbf{composición}
+$f\circ g$ se define por
+
+$$(f\circ g)(x) = f\big(g(x)\big)$$
+
+Es decir, primero se evalúa $g$ en $x$, y después se evalúa $f$ en el
+resultado obtenido. El dominio de $f\circ g$ consta de los valores de $x$
+en el dominio de $g$ tales que $g(x)$ esté en el dominio de $f$.
+
+\medskip
+
+La regla de la cadena de la sección anterior, escrita en términos de la
+composición $f\circ g$, toma la forma:
+
+$$(f\circ g)'(x) = f'\big(g(x)\big)\cdot g'(x)$$
+
+Es decir: la derivada de la composición es la derivada de la función
+``de afuera'' ($f$), evaluada en la función ``de adentro'' ($g(x)$),
+multiplicada por la derivada de la función ``de adentro''.
+
+\medskip
+
+\textbf{Ejemplo ilustrativo.} Sea $F(x) = (f\circ g)(x)$, con
+$f(u)=u^2$ y $g(x)=3x+1$, de modo que $F(x) = (3x+1)^2$.
+
+Usando la regla de la cadena: $f'(u)=2u$, así que $f'(g(x)) = 2(3x+1)$; y
+$g'(x)=3$. Entonces,
+
+$$F'(x) = f'\big(g(x)\big)\cdot g'(x) = 2(3x+1)\cdot 3 = 6(3x+1) = 18x+6$$
+
+\textbf{Verificación:} expandiendo directamente, $F(x)=(3x+1)^2 = 9x^2+6x+1$,
+y derivando término por término (regla de la potencia y de la suma):
+$F'(x) = 18x+6$. Coincide con el resultado obtenido por la regla de la
+cadena. $\blacksquare$
+
+\end{document}
+
+\end{document}
